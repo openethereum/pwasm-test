@@ -1,0 +1,10 @@
+[package]
+name = "pwasm-test-utils"
+version = "0.1.0"
+authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
+
+[dependencies.parity-hash]
+version = "1"
+
+[dependencies.bigint]
+version = "4"
