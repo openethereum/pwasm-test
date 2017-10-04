@@ -223,6 +223,16 @@ pub extern fn origin(dest: *mut u8) {
 }
 
 #[no_mangle]
+pub extern fn balance(address_ptr: *const u8, balance_ptr: *mut u8) {
+    EXTERNAL.with(|r| {
+        let address = unsafe { Address::from_slice(slice::from_raw_parts(address_ptr, 20)) };
+        let mut balance = unsafe { Address::from_slice(slice::from_raw_parts(balance_ptr, 32)) };
+        r.borrow_mut().balance(&address).to_big_endian(&mut balance);
+    });
+}
+
+
+#[no_mangle]
 pub extern fn debug(str_ptr: *const u8, str_len: u32) {
     EXTERNAL.with(|r| {
         let msg = unsafe { String::from_raw_parts(str_ptr as *mut _, str_len as usize, str_len as usize) };

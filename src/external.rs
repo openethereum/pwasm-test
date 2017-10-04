@@ -58,6 +58,9 @@ pub trait External {
     fn address(&mut self) -> Address {
         unimplemented!();
     }
+    fn balance(&mut self, _address: &Address) -> U256 {
+        unimplemented!();
+    }
 }
 
 pub struct ExternalImpl {}
