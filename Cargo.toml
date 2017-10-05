@@ -1,5 +1,5 @@
 [package]
-name = "pwasm-test-utils"
+name = "pwasm-test-tools"
 version = "0.1.0"
 authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
 
