@@ -46,4 +46,4 @@ use pwasm_std::bigint::U256;
 
 `rustup override set nightly`
 
-`cargo test --features=std --verbose -- --nocapture`
+`cargo test --features=pwasm-std/std --verbose -- --nocapture`
