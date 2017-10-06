@@ -5,14 +5,14 @@ use std::cell::RefCell;
 use std::slice;
 use std::ptr;
 
-use parity_hash::{ Address, H256 };
-use bigint::{ U256 };
+use parity_hash::{Address, H256};
+use bigint::U256;
 
 pub mod external;
 
 pub use external::External;
 pub use external::Error;
-use external::{ ExternalImpl };
+use external::{ExternalImpl};
 
 thread_local!(pub static EXTERNAL: RefCell<Box <External>> = RefCell::new(Box::new(ExternalImpl::new())));
 
@@ -28,16 +28,11 @@ macro_rules! test_with_external {
        $struc:ident: $imp:item $($test_name:ident $test_body:block)*
     ) => {
         struct $struc;
-        impl $struc {
-            fn new() -> $struc {
-                $struc{}
-            }
-        }
         $imp
 
         $(#[test]
         fn $test_name() {
-            $crate::set_external(Box::new($struc::new()));
+            $crate::set_external(Box::new($struc));
             $test_body
         })*
     }

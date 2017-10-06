@@ -1,5 +1,5 @@
-use parity_hash::{ H256, Address };
-use bigint::{ U256 };
+use parity_hash::{H256, Address};
+use bigint::U256;
 
 pub struct Error;
 
