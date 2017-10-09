@@ -1,4 +1,4 @@
-*pwasm-test-tools* is a set of tools to make it easy to test pwasm-contracts written with [pwasm-std](https://github.com/NikVolf/pwasm-std).
+*pwasm-test* is a set of tools to make it easy to test pwasm-contracts written with [pwasm-std](https://github.com/NikVolf/pwasm-std).
 
 ## TODO
 More examples and docs
