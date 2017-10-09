@@ -1,5 +1,5 @@
-use parity_hash::{H256, Address};
-use bigint::U256;
+use pwasm_std::hash::{H256, Address};
+use pwasm_std::bigint::U256;
 
 pub struct Error;
 

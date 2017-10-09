@@ -1,12 +1,11 @@
-extern crate parity_hash;
-extern crate bigint;
+extern crate pwasm_std;
 
 use std::cell::RefCell;
 use std::slice;
 use std::ptr;
 
-use parity_hash::{Address, H256};
-use bigint::U256;
+use pwasm_std::hash::{Address, H256};
+use pwasm_std::bigint::U256;
 
 pub mod external;
 
@@ -221,7 +220,7 @@ pub extern fn origin(dest: *mut u8) {
 pub extern fn balance(address_ptr: *const u8, balance_ptr: *mut u8) {
     EXTERNAL.with(|r| {
         let address = unsafe { Address::from_slice(slice::from_raw_parts(address_ptr, 20)) };
-        let mut balance = unsafe { Address::from_slice(slice::from_raw_parts(balance_ptr, 32)) };
+        let mut balance = unsafe { slice::from_raw_parts_mut(balance_ptr, 32) };
         r.borrow_mut().balance(&address).to_big_endian(&mut balance);
     });
 }
