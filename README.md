@@ -10,7 +10,7 @@ More examples and docs
 #[macro_use]
 extern crate pwasm_std;
 #[macro_use]
-extern crate pwasm_test_tools;
+extern crate pwasm_test;
 
 use pwasm_std::{storage, ext};
 use pwasm_std::hash::H256;
