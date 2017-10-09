@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/fckt/pwasm-test.svg?branch=master)](https://travis-ci.org/fckt/pwasm-test)
+
 *pwasm-test* is a set of tools to make it easy to test internal logic of contracts written using [pwasm-std](https://github.com/NikVolf/pwasm-std).
 
 ## TODO
