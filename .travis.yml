@@ -3,3 +3,7 @@ language:
 
 rust:
   - nightly
+
+script:
+  - cargo build --features=pwasm-std/std --verbose --all
+  - cargo test --features=pwasm-std/std --verbose --all
