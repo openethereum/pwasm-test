@@ -1,4 +1,6 @@
-*pwasm-test-tools* is a set of tools to make it easy to test pwasm-contracts written with [pwasm-std](https://github.com/NikVolf/pwasm-std).
+[![Build Status](https://travis-ci.org/fckt/pwasm-test.svg?branch=master)](https://travis-ci.org/fckt/pwasm-test)
+
+*pwasm-test* is a set of tools to make it easy to test internal logic of contracts written using [pwasm-std](https://github.com/NikVolf/pwasm-std).
 
 ## TODO
 More examples and docs
@@ -10,7 +12,7 @@ More examples and docs
 #[macro_use]
 extern crate pwasm_std;
 #[macro_use]
-extern crate pwasm_test_tools;
+extern crate pwasm_test;
 
 use pwasm_std::{storage, ext};
 use pwasm_std::hash::H256;
