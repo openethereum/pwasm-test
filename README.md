@@ -18,8 +18,8 @@ use pwasm_std::{storage, ext};
 use pwasm_std::hash::H256;
 use pwasm_std::bigint::U256;
 
-  #[cfg(test)]
-    mod tests {
+#[cfg(test)]
+mod tests {
     use super::*;
 
     test_with_external!(
