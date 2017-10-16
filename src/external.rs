@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use pwasm_std::hash::{H256, Address};
 use pwasm_std::bigint::U256;
 
@@ -59,6 +60,9 @@ pub trait External {
         unimplemented!();
     }
     fn balance(&mut self, _address: &Address) -> U256 {
+        *self.balances().get(_address).unwrap_or(&U256::from(0))
+    }
+    fn balances(&mut self) -> HashMap<Address, U256> {
         unimplemented!();
     }
 }
