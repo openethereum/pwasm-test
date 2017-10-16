@@ -46,6 +46,4 @@ mod tests {
 
 ## Run
 
-`rustup override set nightly`
-
-`cargo test --features=pwasm-std/std`
+`cargo test`
