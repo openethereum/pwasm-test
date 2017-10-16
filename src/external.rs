@@ -5,8 +5,20 @@ use pwasm_std::bigint::U256;
 pub struct Error;
 
 pub trait External {
+    fn balance(&mut self, _address: &Address) -> U256 {
+        *self.balances().get(_address).unwrap_or(&U256::from(0))
+    }
+    fn balances(&mut self) -> HashMap<Address, U256> {
+        HashMap::new()
+    }
     fn storage_read(&mut self, _key: &H256) -> Result<[u8; 32], Error>  {
-        unimplemented!();
+        match self.storage().get(_key) {
+            Some(value) => Ok(*value),
+            None => Err(Error)
+        }
+    }
+    fn storage(&mut self) -> HashMap<H256, [u8; 32]>  {
+        HashMap::new()
     }
     fn storage_write(&mut self, _key: &H256, _value: &[u8]) -> Result<(), Error> {
         unimplemented!();
@@ -57,12 +69,6 @@ pub trait External {
         unimplemented!();
     }
     fn address(&mut self) -> Address {
-        unimplemented!();
-    }
-    fn balance(&mut self, _address: &Address) -> U256 {
-        *self.balances().get(_address).unwrap_or(&U256::from(0))
-    }
-    fn balances(&mut self) -> HashMap<Address, U256> {
         unimplemented!();
     }
 }
