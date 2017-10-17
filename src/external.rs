@@ -20,7 +20,7 @@ pub trait External {
     fn storage(&mut self) -> HashMap<H256, [u8; 32]>  {
         HashMap::new()
     }
-    fn storage_write(&mut self, _key: &H256, _value: &[u8]) -> Result<(), Error> {
+    fn storage_write(&mut self, _key: &H256, _value: &[u8; 32]) -> Result<(), Error> {
         unimplemented!();
     }
     fn suicide(&mut self, _refund: &Address) {
