@@ -5,6 +5,3 @@ authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
 
 [dependencies.pwasm-std]
 git = "https://github.com/NikVolf/pwasm-std"
-
-[features]
-default = ["pwasm-std/std"]

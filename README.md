@@ -46,4 +46,4 @@ mod tests {
 
 ## Run
 
-`cargo test`
+`cargo test --features std`
