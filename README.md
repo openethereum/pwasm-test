@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/fckt/pwasm-test.svg?branch=master)](https://travis-ci.org/fckt/pwasm-test)
+[![Build Status](https://travis-ci.org/paritytech/pwasm-test.svg?branch=master)](https://travis-ci.org/fckt/pwasm-test)
 
-*pwasm-test* is a set of tools to make it easy to test internal logic of contracts written using [pwasm-std](https://github.com/NikVolf/pwasm-std).
+*pwasm-test* is a set of tools to make it easy to test internal logic of contracts written using [pwasm-std](https://github.com/paritytech/pwasm-std).
 
 ## TODO
 More examples and docs
