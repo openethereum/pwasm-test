@@ -17,6 +17,7 @@ extern crate pwasm_test;
 use pwasm_std::{storage, ext};
 use pwasm_std::hash::H256;
 use pwasm_std::bigint::U256;
+use pwasm_test::{Error, External};
 
 #[cfg(test)]
 mod tests {
@@ -34,16 +35,15 @@ mod tests {
         }
         simple_test1 {
             let val = storage::read(&H256::from("68371d7e884c168ae2022c82bd837d51837718a7f7dfb7aa3f753074a35e1d87"));
-            assert_eq!(val, Ok([1u8; 32]));
+            assert_eq!(val.unwrap(), [1u8; 32]);
         }
         simple_test2 {
             assert_eq!(ext::value(), 500.into());
         }
     );
-
 }
 ```
 
 ## Run
 
-`cargo test --features std`
+`cargo test --features=pwasm-std/std`
