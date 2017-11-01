@@ -2,9 +2,6 @@
 
 *pwasm-test* is a set of tools to make it easy to test internal logic of contracts written using [pwasm-std](https://github.com/paritytech/pwasm-std).
 
-## TODO
-More examples and docs
-
 ## Usage
 
 ```rust
