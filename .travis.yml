@@ -5,5 +5,5 @@ rust:
   - nightly
 
 script:
-  - cargo build --features=pwasm-std/std --verbose --all
+  - cargo build --features=pwasm-std/std --verbose --all --release
   - cargo test --features=pwasm-std/std --verbose --all

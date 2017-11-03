@@ -20,16 +20,20 @@ use pwasm_test::{Error, External};
 mod tests {
     use super::*;
 
-    test_with_external!(
-        DummyExternal: impl External for DummyExternal {
+    struct DummyExternal;
 
-            fn storage_read(&mut self, key: &H256) -> Result<[u8; 32], Error> {
-                Ok([1u8; 32])
-            }
-            fn value(&mut self) -> U256 {
-                500.into()
-            }
+    impl External for DummyExternal {
+        fn storage_read(&mut self, key: &H256) -> Result<[u8; 32], Error> {
+            Ok([1u8; 32])
         }
+
+        fn value(&mut self) -> U256 {
+            500.into()
+        }
+    }
+
+    test_with_external!(
+        DummyExternal,
         simple_test1 {
             let val = storage::read(&H256::from("68371d7e884c168ae2022c82bd837d51837718a7f7dfb7aa3f753074a35e1d87"));
             assert_eq!(val.unwrap(), [1u8; 32]);
