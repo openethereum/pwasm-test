@@ -4,19 +4,20 @@ extern crate pwasm_std;
 
 use pwasm_std::hash::H256;
 use pwasm_std::storage;
-use pwasm_test::External;
+use pwasm_test::{External, Error};
 
-use std::collections::HashMap;
+#[derive(Default)]
+struct DummyExternal;
+
+impl External for DummyExternal {
+	fn storage_read(&mut self, _key: &H256) -> Result<[u8; 32], Error> {
+		Ok([250; 32])
+	}
+}
 
 test_with_external!(
-    DummyExternal: impl External for DummyExternal {
-        fn storage(&mut self) -> HashMap<H256, [u8; 32]> {
-            let mut storage = HashMap::new();
-            storage.insert(H256::new(), [250; 32]);
-            storage
-        }
-    }
-    check_balance {
-        assert_eq!([250; 32], storage::read(&H256::new()).unwrap());
-    }
+	DummyExternal::default(),
+	read_storage {
+		assert_eq!([250; 32], storage::read(&H256::new()).unwrap());
+	}
 );
