@@ -1,6 +1,8 @@
 extern crate pwasm_std;
+extern crate pwasm_abi;
 
 pub mod external;
+pub mod fake_runtime;
 mod externs;
 
 pub use external::{External, Error};
