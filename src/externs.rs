@@ -131,7 +131,7 @@ pub unsafe extern "C" fn suicide(refund_ptr: *const u8) {
 pub unsafe extern "C" fn blockhash(number: i64, dest: *mut u8) -> i32 {
 	EXTERNAL.with(|r| {
 		match r.borrow_mut().blockhash(number as u64) {
-			Ok(mut result) => { ptr::copy(result.as_ptr(), dest, result.len()); 0 },
+			Ok(result) => { ptr::copy(result.as_ptr(), dest, result.len()); 0 },
 			Err(_e) => 1
 		}
 	})
@@ -140,7 +140,7 @@ pub unsafe extern "C" fn blockhash(number: i64, dest: *mut u8) -> i32 {
 #[no_mangle]
 pub unsafe extern "C" fn coinbase(dest: *mut u8) {
 	EXTERNAL.with(|r| {
-		ptr::copy(dest, r.borrow_mut().coinbase().as_mut_ptr(), 20);
+		ptr::copy(r.borrow_mut().coinbase().as_mut_ptr(), dest, 20);
 	})
 }
 
@@ -170,7 +170,7 @@ pub unsafe extern "C" fn difficulty(dest: *mut u8) {
 pub unsafe extern "C" fn gaslimit(dest: *mut u8) {
 	let mut dest = slice::from_raw_parts_mut(dest, 32);
 	EXTERNAL.with(|r| {
-		r.borrow_mut().difficulty().to_big_endian(&mut dest);
+		r.borrow_mut().gas_limit().to_big_endian(&mut dest);
 	});
 }
 
