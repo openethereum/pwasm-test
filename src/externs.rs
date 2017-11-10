@@ -51,7 +51,7 @@ pub unsafe extern "C" fn create(endowment_ptr: *const u8, code_ptr: *const u8, c
 		let endowment = U256::from_big_endian(slice::from_raw_parts(endowment_ptr, 32));
 		let code: &[u8] = slice::from_raw_parts(code_ptr, code_len as usize);
 		match r.borrow_mut().create(endowment, code) {
-			Ok(result) => {  ptr::copy(result.as_ptr(), address_ptr, result.len()); 0 },
+			Ok(result) => { ptr::copy(result.as_ptr(), address_ptr, result.len()); 0 },
 			Err(_e) => 1
 		}
 	})
@@ -131,7 +131,7 @@ pub unsafe extern "C" fn suicide(refund_ptr: *const u8) {
 pub unsafe extern "C" fn blockhash(number: i64, dest: *mut u8) -> i32 {
 	EXTERNAL.with(|r| {
 		match r.borrow_mut().blockhash(number as u64) {
-			Ok(mut result) => { ptr::copy(dest, result.as_mut_ptr(), result.len()); 0 },
+			Ok(mut result) => { ptr::copy(result.as_ptr(), dest, result.len()); 0 },
 			Err(_e) => 1
 		}
 	})
@@ -177,14 +177,14 @@ pub unsafe extern "C" fn gaslimit(dest: *mut u8) {
 #[no_mangle]
 pub unsafe extern "C" fn sender(dest: *mut u8) {
 	EXTERNAL.with(|r| {
-		ptr::copy(dest, r.borrow_mut().sender().as_mut_ptr(), 20);
+		ptr::copy(r.borrow_mut().sender().as_ptr(), dest , 20);
 	});
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn address(dest: *mut u8) {
 	EXTERNAL.with(|r| {
-		ptr::copy(dest, r.borrow_mut().address().as_mut_ptr(), 20);
+		ptr::copy(r.borrow_mut().address().as_ptr(), dest , 20);
 	});
 }
 
@@ -199,7 +199,7 @@ pub unsafe extern "C" fn value(dest: *mut u8) {
 #[no_mangle]
 pub unsafe extern "C" fn origin(dest: *mut u8) {
 	EXTERNAL.with(|r| {
-		ptr::copy(dest, r.borrow_mut().origin().as_mut_ptr(), 20);
+		ptr::copy(r.borrow_mut().origin().as_ptr(), dest , 20);
 	});
 }
 
