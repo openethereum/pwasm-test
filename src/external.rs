@@ -66,7 +66,7 @@ pub trait External {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting blocknumber  extern
+	/// Invoked when contract is requesting blocknumber extern
 	fn blocknumber(&mut self) -> u64 {
 		unimplemented!()
 	}
