@@ -1,5 +1,6 @@
 use pwasm_std::hash::{H256, Address};
 use pwasm_std::bigint::U256;
+use std::any::Any;
 
 pub struct Error;
 
@@ -100,9 +101,17 @@ pub trait External {
 	fn address(&mut self) -> Address {
 		unimplemented!()
 	}
+
+    fn as_any(&self) -> &Any {
+        unimplemented!()
+    }
 }
 
 /// Dummy unimplemeted external functions interface
 pub struct ExternalImpl;
 
-impl External for ExternalImpl { }
+impl External for ExternalImpl {
+    fn as_any(&self) -> &Any {
+        self
+    }
+}
