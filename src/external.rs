@@ -110,24 +110,79 @@ pub trait External {
 #[derive(Clone, Default)]
 pub struct ExternalInstance {
 	pub storage: HashMap<H256, [u8; 32]>,
+	pub balances: HashMap<Address, U256>,
 	pub sender: Address,
+	pub value: U256,
+	pub address: Address,
+	pub origin: Address,
+	pub coinbase: Address,
+	pub difficulty: U256,
+	pub gas_limit: U256,
+	pub blocknumber: u64,
+	pub timestamp: u64,
 }
 
 impl External for ExternalInstance {
-	fn storage_read(&mut self, key: &H256) -> Result<[u8; 32], Error> {
+	fn storage_read(&mut self, key: &H256) -> [u8; 32] {
 		if let Some(value) = self.storage.get(key) {
-			Ok(value.clone())
+			value.clone()
 		} else {
-			Err(Error)
+			[0u8; 32]
 		}
 	}
-	fn storage_write(&mut self, key: &H256, value: &[u8; 32]) -> Result<(), Error> {
-		self.storage.insert(*key, value.clone());
-		Ok(())
+
+	fn balance(&mut self, address: &Address) -> U256 {
+		self.balances[address]
 	}
+
+	fn storage_write(&mut self, key: &H256, value: &[u8; 32]) {
+		self.storage.insert(*key, value.clone());
+	}
+
 	fn sender(&mut self) -> Address {
 		self.sender
 	}
+
+	/// Invoked when contract is requesting coinbase extern
+	fn coinbase(&mut self) -> Address {
+		self.coinbase
+	}
+
+	/// Invoked when contract is requesting timestamp extern
+	fn timestamp(&mut self) -> u64 {
+		self.timestamp
+	}
+
+	/// Invoked when contract is requesting blocknumber extern
+	fn blocknumber(&mut self) -> u64 {
+		self.blocknumber
+	}
+
+	/// Invoked when contract is requesting difficulty extern
+	fn difficulty(&mut self) -> U256 {
+		self.difficulty
+	}
+
+	/// Invoked when contract is requesting gas_limit extern
+	fn gas_limit(&mut self) -> U256 {
+		self.gas_limit
+	}
+
+	/// Invoked when contract is requesting origin data
+	fn origin(&mut self) -> Address {
+		self.origin
+	}
+
+	/// Invoked when contract is requesting value data
+	fn value(&mut self) -> U256 {
+		self.value
+	}
+
+	/// Invoked when contract is requesting contract address
+	fn address(&mut self) -> Address {
+		self.address
+	}
+
 	fn as_any(&self) -> &Any {
 		self
 	}

@@ -5,43 +5,20 @@ extern crate pwasm_std;
 use pwasm_std::hash::Address;
 use pwasm_std::bigint::U256;
 use pwasm_std::ext;
-use pwasm_test::{External};
-
-#[derive(Default)]
-struct DummyExternal;
-
-impl External for DummyExternal {
-	fn sender(&mut self) -> Address {
-		"0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into()
-	}
-	fn address(&mut self) -> Address {
-		"0x35da6abcb08f2b6164fe380bb6c47bd8f2304d55".into()
-	}
-	fn origin(&mut self) -> Address {
-		"0x51f9c432a4e59ac86282d6adab4c2eb8919160eb".into()
-	}
-	fn coinbase(&mut self) -> Address {
-		"0xc257274276a4e539741ca11b590b9447b26a8051".into()
-	}
-	fn difficulty(&mut self) -> U256 {
-		123.into()
-	}
-	fn gas_limit(&mut self) -> U256 {
-		1234.into()
-	}
-	fn value(&mut self) -> U256 {
-		12345.into()
-	}
-	fn blocknumber(&mut self) -> u64 {
-		123123u64
-	}
-	fn timestamp(&mut self) -> u64 {
-		123124u64
-	}
-}
+use pwasm_test::{ExternalBuilder};
 
 test_with_external!(
-	DummyExternal::default(),
+	ExternalBuilder::new()
+		.sender("0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into())
+		.address("0x35da6abcb08f2b6164fe380bb6c47bd8f2304d55".into())
+		.origin("0x51f9c432a4e59ac86282d6adab4c2eb8919160eb".into())
+		.coinbase("0xc257274276a4e539741ca11b590b9447b26a8051".into())
+		.difficulty(123.into())
+		.gas_limit(1234.into())
+		.value(12345.into())
+		.blocknumber(123123u64)
+		.timestamp(123124u64)
+	.build(),
 	sender {
 		assert_eq!(Address::from("0x16a0772b17ae004e6645e0e95bf50ad69498a34e"), ext::sender());
 	}

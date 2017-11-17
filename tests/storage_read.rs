@@ -4,19 +4,10 @@ extern crate pwasm_std;
 
 use pwasm_std::hash::H256;
 use pwasm_std::storage;
-use pwasm_test::External;
-
-#[derive(Default)]
-struct DummyExternal;
-
-impl External for DummyExternal {
-	fn storage_read(&mut self, _key: &H256) -> [u8; 32] {
-		[250; 32]
-	}
-}
+use pwasm_test::{ExternalBuilder};
 
 test_with_external!(
-	DummyExternal::default(),
+	ExternalBuilder::new().storage_write(H256::new(), [250; 32]).build(),
 	read_storage {
 		assert_eq!([250; 32], storage::read(&H256::new()));
 	}

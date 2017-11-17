@@ -1,6 +1,6 @@
 extern crate pwasm_std;
 
-pub mod external;
+mod external;
 mod externs;
 mod builder;
 
