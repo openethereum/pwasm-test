@@ -1,15 +1,15 @@
 //! Module for linking test externals
-
-use std::cell::RefCell;
+use std::any::Any;
+use std::cell::{RefCell, Ref};
 use std::slice;
 use std::ptr;
 
 use pwasm_std::hash::{H256, Address};
 use pwasm_std::bigint::U256;
 
-use external::{External, ExternalImpl};
+use external::{External, ExternalInstance};
 
-thread_local!(pub static EXTERNAL: RefCell<Box <External>> = RefCell::new(Box::new(ExternalImpl)));
+thread_local!(pub static EXTERNAL: RefCell<Box<External>> = RefCell::new(Box::new(ExternalInstance::default())));
 
 /// Set handling external for the current thread
 /// Ideally should be done before each test to avoid dirty state
@@ -18,6 +18,17 @@ pub fn set_external(ext: Box<External>) {
 	EXTERNAL.with(|e| {
 		*e.borrow_mut() = ext;
 	});
+}
+
+pub fn get_external<T: External + Clone + 'static>() -> T {
+	EXTERNAL.with(|arg| {
+		let ref_cell: &RefCell<Box<External>> = arg;
+		let ref_: Ref<Box<External>> = ref_cell.borrow();
+
+		let any: &Any = ref_.as_any();
+		let downcasted: &T = any.downcast_ref().unwrap();
+		downcasted.clone()
+	})
 }
 
 #[no_mangle]

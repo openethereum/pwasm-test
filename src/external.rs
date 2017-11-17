@@ -1,6 +1,9 @@
+use std::any::Any;
 use pwasm_std::hash::{H256, Address};
 use pwasm_std::bigint::U256;
+use std::collections::HashMap;
 
+#[derive(Debug)]
 pub struct Error;
 
 /// Trait to manage calls to blockchain externs locally
@@ -100,9 +103,32 @@ pub trait External {
 	fn address(&mut self) -> Address {
 		unimplemented!()
 	}
+
+	fn as_any(&self) -> &Any;
 }
 
-/// Dummy unimplemeted external functions interface
-pub struct ExternalImpl;
+#[derive(Clone, Default)]
+pub struct ExternalInstance {
+	pub storage: HashMap<H256, [u8; 32]>,
+	pub sender: Address,
+}
 
-impl External for ExternalImpl { }
+impl External for ExternalInstance {
+	fn storage_read(&mut self, key: &H256) -> Result<[u8; 32], Error> {
+		if let Some(value) = self.storage.get(key) {
+			Ok(value.clone())
+		} else {
+			Err(Error)
+		}
+	}
+	fn storage_write(&mut self, key: &H256, value: &[u8; 32]) -> Result<(), Error> {
+		self.storage.insert(*key, value.clone());
+		Ok(())
+	}
+	fn sender(&mut self) -> Address {
+		self.sender
+	}
+	fn as_any(&self) -> &Any {
+		self
+	}
+}
