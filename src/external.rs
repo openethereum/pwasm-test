@@ -12,12 +12,12 @@ pub trait External {
 	}
 
 	/// Invoked when contract is requesting storage_read extern
-	fn storage_read(&mut self, _key: &H256) -> Result<[u8; 32], Error>  {
+	fn storage_read(&mut self, _key: &H256) -> [u8; 32]  {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is requesting storage_write extern
-	fn storage_write(&mut self, _key: &H256, _value: &[u8; 32]) -> Result<(), Error> {
+	fn storage_write(&mut self, _key: &H256, _value: &[u8; 32]) {
 		unimplemented!()
 	}
 

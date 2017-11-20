@@ -21,27 +21,22 @@ pub fn set_external(ext: Box<External>) {
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn storage_read(key: *const u8, dst: *mut u8) -> i32 {
+pub unsafe extern "C" fn storage_read(key: *const u8, dst: *mut u8) {
 	EXTERNAL.with(|r| {
 		let key = slice::from_raw_parts(key, 32);
-		match r.borrow_mut().storage_read(&H256::from_slice(key)) {
-			Ok(result) => { ptr::copy(result.as_ptr(), dst, result.len()); 0 },
-			Err(_e) => 1
-		}
+		let result = r.borrow_mut().storage_read(&H256::from_slice(key));
+		ptr::copy(result.as_ptr(), dst, result.len());
 	})
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn storage_write(key: *const u8, src_raw: *const u8) -> i32 {
+pub unsafe extern "C" fn storage_write(key: *const u8, src_raw: *const u8) {
 	EXTERNAL.with(|r| {
 		let key = slice::from_raw_parts(key, 32);
 		let mut src = [0u8; 32];
 		let src_slice = slice::from_raw_parts(src_raw, 32);
 		src.copy_from_slice(src_slice);
-		match r.borrow_mut().storage_write(&H256::from_slice(key), &src) {
-			Ok(_r) => 0,
-			Err(_e) => 1
-		}
+		r.borrow_mut().storage_write(&H256::from_slice(key), &src);
 	})
 }
 
