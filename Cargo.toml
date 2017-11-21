@@ -3,5 +3,5 @@ name = "pwasm-test"
 version = "0.1.0"
 authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
 
-[dependencies.pwasm-std]
-git = "https://github.com/paritytech/pwasm-std"
+[dependencies]
+pwasm-std = "0.1"
