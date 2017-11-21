@@ -108,9 +108,17 @@ pub trait External {
 }
 
 #[derive(Clone, Default)]
+pub struct Call {
+	pub address: Address,
+	pub value: U256,
+	pub input: Box<[u8]>
+}
+
+#[derive(Clone, Default)]
 pub struct ExternalInstance {
 	pub storage: HashMap<H256, [u8; 32]>,
 	pub balances: HashMap<Address, U256>,
+	pub calls: Vec<Call>,
 	pub sender: Address,
 	pub value: U256,
 	pub address: Address,
@@ -120,6 +128,12 @@ pub struct ExternalInstance {
 	pub gas_limit: U256,
 	pub blocknumber: u64,
 	pub timestamp: u64,
+}
+
+impl ExternalInstance {
+	pub fn calls(&self) -> Vec<Call> {
+		self.calls.clone()
+	}
 }
 
 impl External for ExternalInstance {
@@ -137,6 +151,15 @@ impl External for ExternalInstance {
 
 	fn storage_write(&mut self, key: &H256, value: &[u8; 32]) {
 		self.storage.insert(*key, value.clone());
+	}
+
+	fn call(&mut self, address: &Address, val: U256, input: &[u8], result: &mut [u8]) -> Result<(), Error> {
+		self.calls.push(Call {
+			address: address.clone(),
+			value: val,
+			input: Box::from(input)
+		});
+		Ok(())
 	}
 
 	fn sender(&mut self) -> Address {
