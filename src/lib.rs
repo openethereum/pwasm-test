@@ -1,9 +1,11 @@
 extern crate pwasm_std;
 
-pub mod external;
+mod external;
 mod externs;
+mod builder;
 
-pub use external::{External, Error};
+pub use external::{External, ExternalInstance, Error};
+pub use builder::{ExternalBuilder};
 pub use externs::*;
 
 /// Test with provided externals manager (`impl ::pwasm_test::External`)

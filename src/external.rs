@@ -1,6 +1,9 @@
+use std::any::Any;
 use pwasm_std::hash::{H256, Address};
 use pwasm_std::bigint::U256;
+use std::collections::HashMap;
 
+#[derive(Debug)]
 pub struct Error;
 
 /// Trait to manage calls to blockchain externs locally
@@ -100,9 +103,102 @@ pub trait External {
 	fn address(&mut self) -> Address {
 		unimplemented!()
 	}
+
+	fn as_any(&self) -> &Any;
 }
 
-/// Dummy unimplemeted external functions interface
-pub struct ExternalImpl;
+#[derive(Clone, Default)]
+pub struct Call {
+	pub address: Address,
+	pub value: U256,
+	pub input: Box<[u8]>
+}
 
-impl External for ExternalImpl { }
+#[derive(Clone, Default)]
+pub struct ExternalInstance {
+	pub storage: HashMap<H256, [u8; 32]>,
+	pub balances: HashMap<Address, U256>,
+	pub calls: Vec<Call>,
+	pub sender: Address,
+	pub value: U256,
+	pub address: Address,
+	pub origin: Address,
+	pub coinbase: Address,
+	pub difficulty: U256,
+	pub gas_limit: U256,
+	pub blocknumber: u64,
+	pub timestamp: u64,
+}
+
+impl ExternalInstance {
+	pub fn calls(&self) -> Vec<Call> {
+		self.calls.clone()
+	}
+}
+
+impl External for ExternalInstance {
+	fn storage_read(&mut self, key: &H256) -> [u8; 32] {
+		if let Some(value) = self.storage.get(key) {
+			value.clone()
+		} else {
+			[0u8; 32]
+		}
+	}
+
+	fn balance(&mut self, address: &Address) -> U256 {
+		self.balances[address]
+	}
+
+	fn storage_write(&mut self, key: &H256, value: &[u8; 32]) {
+		self.storage.insert(*key, value.clone());
+	}
+
+	fn call(&mut self, address: &Address, val: U256, input: &[u8], result: &mut [u8]) -> Result<(), Error> {
+		self.calls.push(Call {
+			address: address.clone(),
+			value: val,
+			input: Box::from(input)
+		});
+		Ok(())
+	}
+
+	fn sender(&mut self) -> Address {
+		self.sender
+	}
+
+	fn coinbase(&mut self) -> Address {
+		self.coinbase
+	}
+
+	fn timestamp(&mut self) -> u64 {
+		self.timestamp
+	}
+
+	fn blocknumber(&mut self) -> u64 {
+		self.blocknumber
+	}
+
+	fn difficulty(&mut self) -> U256 {
+		self.difficulty
+	}
+
+	fn gas_limit(&mut self) -> U256 {
+		self.gas_limit
+	}
+
+	fn origin(&mut self) -> Address {
+		self.origin
+	}
+
+	fn value(&mut self) -> U256 {
+		self.value
+	}
+
+	fn address(&mut self) -> Address {
+		self.address
+	}
+
+	fn as_any(&self) -> &Any {
+		self
+	}
+}
