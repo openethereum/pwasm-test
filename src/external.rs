@@ -143,42 +143,34 @@ impl External for ExternalInstance {
 		self.sender
 	}
 
-	/// Invoked when contract is requesting coinbase extern
 	fn coinbase(&mut self) -> Address {
 		self.coinbase
 	}
 
-	/// Invoked when contract is requesting timestamp extern
 	fn timestamp(&mut self) -> u64 {
 		self.timestamp
 	}
 
-	/// Invoked when contract is requesting blocknumber extern
 	fn blocknumber(&mut self) -> u64 {
 		self.blocknumber
 	}
 
-	/// Invoked when contract is requesting difficulty extern
 	fn difficulty(&mut self) -> U256 {
 		self.difficulty
 	}
 
-	/// Invoked when contract is requesting gas_limit extern
 	fn gas_limit(&mut self) -> U256 {
 		self.gas_limit
 	}
 
-	/// Invoked when contract is requesting origin data
 	fn origin(&mut self) -> Address {
 		self.origin
 	}
 
-	/// Invoked when contract is requesting value data
 	fn value(&mut self) -> U256 {
 		self.value
 	}
 
-	/// Invoked when contract is requesting contract address
 	fn address(&mut self) -> Address {
 		self.address
 	}

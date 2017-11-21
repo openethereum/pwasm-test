@@ -2,7 +2,7 @@ use pwasm_std::hash::{H256, Address};
 use pwasm_std::bigint::U256;
 use std::collections::HashMap;
 
-use external::{ExternalInstance};
+use external::ExternalInstance;
 
 /// A builder for quick creation of External impls for testing.
 pub struct ExternalBuilder {
@@ -42,7 +42,7 @@ impl ExternalBuilder {
 		self
 	}
 
-	pub fn storage_write(mut self, key: H256, value: [u8; 32]) -> Self {
+	pub fn storage(mut self, key: H256, value: [u8; 32]) -> Self {
 		self.storage.insert(key, value);
 		self
 	}

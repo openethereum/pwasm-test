@@ -5,7 +5,7 @@ extern crate pwasm_std;
 use pwasm_std::hash::Address;
 use pwasm_std::bigint::U256;
 use pwasm_std::ext;
-use pwasm_test::{ExternalBuilder};
+use pwasm_test::ExternalBuilder;
 
 test_with_external!(
 	ExternalBuilder::new()
@@ -18,7 +18,7 @@ test_with_external!(
 		.value(12345.into())
 		.blocknumber(123123u64)
 		.timestamp(123124u64)
-	.build(),
+		.build(),
 	sender {
 		assert_eq!(Address::from("0x16a0772b17ae004e6645e0e95bf50ad69498a34e"), ext::sender());
 	}
