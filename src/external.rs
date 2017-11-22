@@ -49,6 +49,11 @@ pub trait External {
 		unimplemented!()
 	}
 
+	/// Invoked when contract fires an event
+	fn log(&mut self, _topics: &[H256], _data: &[u8]) {
+		unimplemented!()
+	}
+
 	/// Invoked when contract is requesting debug message extern
 	fn debug_log(&mut self, _msg: String) {
 		unimplemented!()
@@ -115,10 +120,17 @@ pub struct Call {
 }
 
 #[derive(Clone, Default)]
+pub struct LogEntry {
+	pub topics: Box<[H256]>,
+	pub data: Box<[u8]>,
+}
+
+#[derive(Clone, Default)]
 pub struct ExternalInstance {
 	pub storage: HashMap<H256, [u8; 32]>,
 	pub balances: HashMap<Address, U256>,
 	pub calls: Vec<Call>,
+	pub log: Vec<LogEntry>,
 	pub sender: Address,
 	pub value: U256,
 	pub address: Address,
@@ -133,6 +145,9 @@ pub struct ExternalInstance {
 impl ExternalInstance {
 	pub fn calls(&self) -> Vec<Call> {
 		self.calls.clone()
+	}
+	pub fn logs(&self) -> Vec<LogEntry> {
+		self.log.clone()
 	}
 }
 
@@ -153,13 +168,21 @@ impl External for ExternalInstance {
 		self.storage.insert(*key, value.clone());
 	}
 
-	fn call(&mut self, address: &Address, val: U256, input: &[u8], result: &mut [u8]) -> Result<(), Error> {
+	fn call(&mut self, address: &Address, val: U256, input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
 		self.calls.push(Call {
 			address: address.clone(),
 			value: val,
 			input: Box::from(input)
 		});
 		Ok(())
+	}
+
+	fn log(&mut self, topics: &[H256], data: &[u8]) {
+		self.log.push(LogEntry {
+			topics: Box::from(topics),
+			data: Box::from(data)
+			}
+		);
 	}
 
 	fn sender(&mut self) -> Address {
