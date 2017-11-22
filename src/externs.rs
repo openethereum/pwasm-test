@@ -226,3 +226,12 @@ pub unsafe extern "C" fn debug(str_ptr: *const u8, str_len: u32) {
 		r.borrow_mut().debug_log(msg);
 	});
 }
+
+#[no_mangle]
+pub unsafe extern "C" fn elog(topic_ptr: *const u8, topic_count: u32, data_ptr: *const u8, data_len: u32) {
+	EXTERNAL.with(|r| {
+		let topics: &[H256] = slice::from_raw_parts(topic_ptr as *const H256, topic_count as usize);
+		let data: &[u8] = slice::from_raw_parts(data_ptr, data_len as usize);
+		r.borrow_mut().log(topics, data);
+	});
+}

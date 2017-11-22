@@ -95,6 +95,7 @@ impl ExternalBuilder {
 
 	pub fn build(self) -> ExternalInstance {
 		ExternalInstance {
+			log: Vec::new(),
 			calls: Vec::new(),
 			storage: self.storage,
 			balances: self.balances,
