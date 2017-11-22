@@ -16,7 +16,7 @@ test_with_external!(
 		ext::log(&topics, data);
 
 		let external = get_external::<ExternalInstance>();
-		let log = external.log();
+		let log = external.logs();
 		assert_eq!(log.len(), 1);
 		let entry = &log[0];
 		assert_eq!(entry.topics.as_ref(), &[H256::new(), H256::new()]);

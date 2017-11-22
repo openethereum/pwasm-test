@@ -146,7 +146,7 @@ impl ExternalInstance {
 	pub fn calls(&self) -> Vec<Call> {
 		self.calls.clone()
 	}
-	pub fn log(&self) -> Vec<LogEntry> {
+	pub fn logs(&self) -> Vec<LogEntry> {
 		self.log.clone()
 	}
 }
