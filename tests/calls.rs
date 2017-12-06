@@ -25,3 +25,18 @@ test_with_external!(
 		assert!(&input == call.input.as_ref());
 	}
 );
+
+test_with_external!(
+	ExternalBuilder::new().endpoint(
+		"0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into(), Box::new(|_val, _input, result| {
+			result[0] = 2;
+			Ok(())
+		})
+	).build(),
+	has_called_with_endpoint {
+		let mut result = [0u8; 1];
+		let input = [2u8; 32];
+		ext::call(&"0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into(), 100.into(), &input, &mut result).unwrap();
+		assert_eq!(result[0], 2);
+	}
+);

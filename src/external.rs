@@ -2,9 +2,12 @@ use std::any::Any;
 use pwasm_std::hash::{H256, Address};
 use pwasm_std::bigint::U256;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 #[derive(Debug)]
 pub struct Error;
+
+pub type Endpoint = Box<Fn(U256, &[u8], &mut [u8]) -> Result<(), Error>>;
 
 /// Trait to manage calls to blockchain externs locally
 pub trait External {
@@ -129,6 +132,7 @@ pub struct LogEntry {
 pub struct ExternalInstance {
 	pub storage: HashMap<H256, [u8; 32]>,
 	pub balances: HashMap<Address, U256>,
+	pub endpoints: HashMap<Address, Rc<Endpoint>>,
 	pub calls: Vec<Call>,
 	pub log: Vec<LogEntry>,
 	pub sender: Address,
@@ -168,13 +172,17 @@ impl External for ExternalInstance {
 		self.storage.insert(*key, value.clone());
 	}
 
-	fn call(&mut self, address: &Address, val: U256, input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
+	fn call(&mut self, address: &Address, val: U256, input: &[u8], result: &mut [u8]) -> Result<(), Error> {
 		self.calls.push(Call {
 			address: address.clone(),
 			value: val,
 			input: Box::from(input)
 		});
-		Ok(())
+		if let Some(endpoint) = self.endpoints.get(address) {
+			(endpoint(val, input, result))
+		} else {
+			Ok(())
+		}
 	}
 
 	fn log(&mut self, topics: &[H256], data: &[u8]) {
