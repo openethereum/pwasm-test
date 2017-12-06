@@ -1,13 +1,15 @@
 use pwasm_std::hash::{H256, Address};
 use pwasm_std::bigint::U256;
 use std::collections::HashMap;
+use std::rc::Rc;
 
-use external::ExternalInstance;
+use external::{ExternalInstance, Endpoint};
 
 /// A builder for quick creation of External impls for testing.
 pub struct ExternalBuilder {
 	storage: HashMap<H256, [u8; 32]>,
 	balances: HashMap<Address, U256>,
+	endpoints: HashMap<Address, Rc<Endpoint>>,
 	value: U256,
 	sender: Address,
 	address: Address,
@@ -24,6 +26,7 @@ impl ExternalBuilder {
 	pub fn new() -> Self {
 		ExternalBuilder {
 			storage: HashMap::new(),
+			endpoints: HashMap::new(),
 			sender: Address::default(),
 			address: Address::default(),
 			balances: HashMap::new(),
@@ -35,6 +38,11 @@ impl ExternalBuilder {
 			blocknumber: 0u64,
 			timestamp: 0u64,
 		}
+	}
+
+	pub fn endpoint(mut self, address: Address, endpoint: Endpoint) -> Self {
+		self.endpoints.insert(address, Rc::new(endpoint));
+		self
 	}
 
 	pub fn sender(mut self, sender: Address) -> Self {
@@ -97,6 +105,7 @@ impl ExternalBuilder {
 		ExternalInstance {
 			log: Vec::new(),
 			calls: Vec::new(),
+			endpoints: self.endpoints,
 			storage: self.storage,
 			balances: self.balances,
 			sender: self.sender,
@@ -113,6 +122,7 @@ impl ExternalBuilder {
 
 	pub fn from_instance(instance: ExternalInstance) -> ExternalBuilder {
 		ExternalBuilder {
+			endpoints: instance.endpoints,
 			storage: instance.storage,
 			balances: instance.balances,
 			sender: instance.sender,
