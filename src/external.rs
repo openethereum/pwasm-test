@@ -7,7 +7,7 @@ use std::rc::Rc;
 #[derive(Debug)]
 pub struct Error;
 
-pub type Endpoint = Box<Fn(U256, &[u8], &mut [u8]) -> Result<(), Error>>;
+pub type Endpoint = Box<FnMut(U256, &[u8], &mut [u8]) -> Result<(), Error>>;
 
 /// Trait to manage calls to blockchain externs locally
 pub trait External {
@@ -178,8 +178,8 @@ impl External for ExternalInstance {
 			value: val,
 			input: Box::from(input)
 		});
-		if let Some(endpoint) = self.endpoints.get(address) {
-			(endpoint(val, input, result))
+		if let Some(endpoint) = self.endpoints.get_mut(address) {
+			Rc::get_mut(endpoint).unwrap()(val, input, result)
 		} else {
 			Ok(())
 		}
