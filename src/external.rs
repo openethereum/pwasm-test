@@ -115,14 +115,14 @@ pub trait External {
 	fn as_any(&self) -> &Any;
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct Call {
 	pub address: Address,
 	pub value: U256,
 	pub input: Box<[u8]>
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct LogEntry {
 	pub topics: Box<[H256]>,
 	pub data: Box<[u8]>,
