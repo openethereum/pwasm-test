@@ -4,4 +4,6 @@ version = "0.1.0"
 authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
 
 [dependencies]
-pwasm-std = "0.2"
+pwasm-std = "0.3"
+pwasm-ethereum = { git = "https://github.com/nikvolf/pwasm-ethereum" }
+bigint = "4"

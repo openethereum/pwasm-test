@@ -1,9 +1,11 @@
 #[macro_use]
 extern crate pwasm_test;
 extern crate pwasm_std;
+extern crate pwasm_ethereum;
 
 use pwasm_std::hash::H256;
-use pwasm_std::storage;
+use pwasm_ethereum::storage;
+
 use pwasm_test::ExternalBuilder;
 
 test_with_external!(

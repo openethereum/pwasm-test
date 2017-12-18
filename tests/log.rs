@@ -1,9 +1,10 @@
 #[macro_use]
 extern crate pwasm_test;
 extern crate pwasm_std;
+extern crate pwasm_ethereum;
 
+use pwasm_ethereum::ext;
 use pwasm_std::hash::H256;
-use pwasm_std::ext;
 use pwasm_test::{ExternalBuilder, ExternalInstance, get_external};
 
 /// An example of how to use get_external to access log of some contract
