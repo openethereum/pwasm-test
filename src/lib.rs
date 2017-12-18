@@ -1,4 +1,6 @@
 extern crate pwasm_std;
+extern crate pwasm_ethereum;
+extern crate bigint;
 
 mod external;
 mod externs;

@@ -1,7 +1,8 @@
-use pwasm_std::hash::{H256, Address};
-use pwasm_std::bigint::U256;
 use std::collections::HashMap;
 use std::rc::Rc;
+
+use pwasm_std::hash::{H256, Address};
+use bigint::U256;
 
 use external::{ExternalInstance, Endpoint};
 
