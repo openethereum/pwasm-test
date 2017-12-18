@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/paritytech/pwasm-test.svg?branch=master)](https://travis-ci.org/fckt/pwasm-test)
 
-*pwasm-test* is a set of tools to make it easy to test internal logic of contracts written using [pwasm-std](https://github.com/paritytech/pwasm-std).
+*pwasm-test* is a set of tools to make it easy to test internal logic of contracts written using [pwasm-std](https://github.com/paritytech/pwasm-std) and [pwasm-ethereum](https://github.com/paritytech/pwasm-ethereum).
 
 ## Usage
 
@@ -8,9 +8,10 @@
 #[macro_use]
 extern crate pwasm_test;
 extern crate pwasm_std;
+extern crate pwasm_ethereum;
 
 use pwasm_std::hash::Address;
-use pwasm_std::ext;
+use pwasm_ethereum::ext;
 use pwasm_test::{ExternalBuilder, ExternalInstance, get_external};
 
 /// An example of how to use get_external to access "calls" to some contract
