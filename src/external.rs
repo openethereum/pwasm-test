@@ -39,17 +39,17 @@ pub trait External {
 	}
 
 	/// Invoked when contract is requesting regular call (ccall) extern
-	fn call(&mut self, _address: &Address, _val: U256, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
+	fn call(&mut self, _gas: u64, _address: &Address, _val: U256, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is requesting delegate call (dcall) extern
-	fn call_code(&mut self, _address: &Address, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
+	fn call_code(&mut self, _gas: u64, _address: &Address, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is requesting static call (ccall) extern
-	fn static_call(&mut self, _address: &Address, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
+	fn static_call(&mut self, _gas: u64, _address: &Address, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
 		unimplemented!()
 	}
 
@@ -118,6 +118,7 @@ pub trait External {
 
 #[derive(Clone, Default, Debug)]
 pub struct Call {
+	pub gas: u64,
 	pub address: Address,
 	pub value: U256,
 	pub input: Box<[u8]>
@@ -173,8 +174,9 @@ impl External for ExternalInstance {
 		self.storage.insert(*key, value.clone());
 	}
 
-	fn call(&mut self, address: &Address, val: U256, input: &[u8], result: &mut [u8]) -> Result<(), Error> {
+	fn call(&mut self, gas: u64, address: &Address, val: U256, input: &[u8], result: &mut [u8]) -> Result<(), Error> {
 		self.calls.push(Call {
+			gas: gas,
 			address: address.clone(),
 			value: val,
 			input: Box::from(input)

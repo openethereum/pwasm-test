@@ -65,6 +65,7 @@ pub unsafe extern "C" fn create(endowment_ptr: *const u8, code_ptr: *const u8, c
 
 #[no_mangle]
 pub unsafe extern "C" fn ccall(
+	gas: u64,
 	address_ptr: *const u8,
 	val_ptr: *const u8,
 	input_ptr: *const u8,
@@ -78,7 +79,7 @@ pub unsafe extern "C" fn ccall(
 		let val = U256::from_big_endian(slice::from_raw_parts(val_ptr, 32));
 		let input: &[u8] = slice::from_raw_parts(input_ptr, input_len as usize);
 		let result: &mut[u8] = slice::from_raw_parts_mut(result_ptr, result_len as usize);
-		match r.borrow_mut().call(&address, val, input, result) {
+		match r.borrow_mut().call(gas, &address, val, input, result) {
 			Ok(_r) => 0,
 			Err(_e) => 1
 		}
@@ -87,6 +88,7 @@ pub unsafe extern "C" fn ccall(
 
 #[no_mangle]
 pub unsafe extern "C" fn dcall(
+	gas: u64,
 	address_ptr: *const u8,
 	input_ptr: *const u8,
 	input_len: u32,
@@ -98,7 +100,7 @@ pub unsafe extern "C" fn dcall(
 		let address = Address::from_slice(slice::from_raw_parts(address_ptr, 20));
 		let input: &[u8] = slice::from_raw_parts(input_ptr, input_len as usize);
 		let result: &mut[u8] = slice::from_raw_parts_mut(result_ptr, result_len as usize);
-		match r.borrow_mut().call_code(&address, input, result) {
+		match r.borrow_mut().call_code(gas, &address, input, result) {
 			Ok(_r) => 0,
 			Err(_e) => 1
 		}
@@ -107,6 +109,7 @@ pub unsafe extern "C" fn dcall(
 
 #[no_mangle]
 pub unsafe extern "C" fn scall(
+	gas: u64,
 	address_ptr: *const u8,
 	input_ptr: *const u8,
 	input_len: u32,
@@ -118,7 +121,7 @@ pub unsafe extern "C" fn scall(
 		let address = Address::from_slice(slice::from_raw_parts(address_ptr, 20));
 		let input: &[u8] = slice::from_raw_parts(input_ptr, input_len as usize);
 		let result: &mut[u8] = slice::from_raw_parts_mut(result_ptr, result_len as usize);
-		match r.borrow_mut().call_code(&address, input, result) {
+		match r.borrow_mut().call_code(gas, &address, input, result) {
 			Ok(_r) => 0,
 			Err(_e) => 1
 		}

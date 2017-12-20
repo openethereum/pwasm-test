@@ -15,7 +15,7 @@ test_with_external!(
 		// Somewhere inside of the contract:
 		let mut result = [0u8; 1];
 		let input = [2u8; 32];
-		ext::call(&Address::new(), 10000.into(), &input, &mut result).unwrap();
+		ext::call(2000, &Address::new(), 10000.into(), &input, &mut result).unwrap();
 
 		let external = get_external::<ExternalInstance>();
 		let calls = external.calls();
@@ -38,7 +38,7 @@ test_with_external!(
 	has_called_with_endpoint {
 		let mut result = [0u8; 1];
 		let input = [2u8; 32];
-		ext::call(&"0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into(), 100.into(), &input, &mut result).unwrap();
+		ext::call(20000, &"0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into(), 100.into(), &input, &mut result).unwrap();
 		assert_eq!(result[0], 2);
 	}
 );
