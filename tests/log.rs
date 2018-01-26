@@ -3,7 +3,7 @@ extern crate pwasm_test;
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
 
-use pwasm_ethereum::ext;
+use pwasm_ethereum as eth;
 use pwasm_std::hash::H256;
 use pwasm_test::{ExternalBuilder, ExternalInstance, get_external};
 
@@ -14,7 +14,7 @@ test_with_external!(
 		// Somewhere inside of the contract:
 		let topics = [H256::new(), H256::new()];
 		let data: &[u8] = b"some data";
-		ext::log(&topics, data);
+		eth::log(&topics, data);
 
 		let external = get_external::<ExternalInstance>();
 		let log = external.logs();
