@@ -3,7 +3,11 @@ name = "pwasm-test"
 version = "0.1.0"
 authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
 
+[dependencies.pwasm-std]
+version = "0.3"
+features = ["std"]
+
 [dependencies]
-pwasm-std = "0.3"
 pwasm-ethereum = { git = "https://github.com/nikvolf/pwasm-ethereum" }
+pwasm-abi = { git = "https://github.com/paritytech/pwasm-abi" }
 bigint = "4"

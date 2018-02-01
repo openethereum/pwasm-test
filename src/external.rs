@@ -4,11 +4,27 @@ use std::rc::Rc;
 
 use pwasm_std::hash::{H256, Address};
 use bigint::U256;
+use pwasm_abi::eth::EndpointInterface;
 
 #[derive(Debug)]
 pub struct Error;
 
-pub type Endpoint = Box<FnMut(U256, &[u8], &mut [u8]) -> Result<(), Error>>;
+pub struct Endpoint (Box<FnMut(U256, &[u8], &mut [u8]) -> Result<(), Error>>);
+
+impl Endpoint {
+	pub fn new(f: Box<FnMut(U256, &[u8], &mut [u8]) -> Result<(), Error>>) -> Endpoint {
+		Endpoint(f)
+	}
+}
+
+impl<T: EndpointInterface + 'static> From<T> for Endpoint {
+	fn from(mut intf: T) -> Endpoint {
+        Endpoint(Box::new(move |_val, input, result| {
+            result.copy_from_slice(&intf.dispatch(input));
+            Ok(())
+        }))
+	}
+}
 
 /// Trait to manage calls to blockchain externs locally
 pub trait External {
@@ -182,7 +198,7 @@ impl External for ExternalInstance {
 			input: Box::from(input)
 		});
 		if let Some(endpoint) = self.endpoints.get_mut(address) {
-			Rc::get_mut(endpoint).unwrap()(val, input, result)
+			Rc::get_mut(endpoint).unwrap().0(val, input, result)
 		} else {
 			Ok(())
 		}
