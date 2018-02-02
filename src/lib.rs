@@ -11,6 +11,21 @@ pub use external::{Endpoint, External, ExternalInstance, Error};
 pub use builder::{ExternalBuilder};
 pub use externs::*;
 
+pub fn ext_update<F>(updater: F) where F: Fn(ExternalBuilder) -> ExternalBuilder {
+	let builder = ExternalBuilder::from(get_external::<ExternalInstance>());
+	let ext = updater(builder).build();
+	set_external(Box::new(ext));
+}
+
+pub fn ext_reset<F>(updater: F) where F: Fn(ExternalBuilder) -> ExternalBuilder {
+	let ext = updater(ExternalBuilder::new()).build();
+	set_external(Box::new(ext));
+}
+
+pub fn ext_get() -> ExternalInstance {
+	get_external::<ExternalInstance>()
+}
+
 /// Test with provided externals manager (`impl ::pwasm_test::External`)
 #[macro_export]
 macro_rules! test_with_external {
