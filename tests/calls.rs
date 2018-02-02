@@ -6,7 +6,7 @@ extern crate pwasm_ethereum;
 use pwasm_std::hash::Address;
 use pwasm_ethereum as eth;
 
-use pwasm_test::{ExternalBuilder, ExternalInstance, get_external};
+use pwasm_test::{ExternalBuilder, ExternalInstance, get_external, Endpoint};
 
 /// An example of how to use get_external to access "calls" to some contract
 test_with_external!(
@@ -30,10 +30,10 @@ test_with_external!(
 
 test_with_external!(
 	ExternalBuilder::new().endpoint(
-		"0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into(), Box::new(|_val, _input, result| {
+		"0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into(), Endpoint::new(Box::new(|_val, _input, result| {
 			result[0] = 2;
 			Ok(())
-		})
+		}))
 	).build(),
 	has_called_with_endpoint {
 		let mut result = [0u8; 1];
