@@ -7,7 +7,10 @@ authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
 version = "0.3"
 features = ["std"]
 
+[dependencies.pwasm-ethereum ]
+git = "https://github.com/nikvolf/pwasm-ethereum"
+features = ["std"]
+
 [dependencies]
-pwasm-ethereum = { git = "https://github.com/nikvolf/pwasm-ethereum" }
 pwasm-abi = { git = "https://github.com/paritytech/pwasm-abi" }
 bigint = "4"
