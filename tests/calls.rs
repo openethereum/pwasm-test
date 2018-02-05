@@ -12,7 +12,7 @@ fn has_called() {
 	ext_reset(|e| e);
 	let mut result = [0u8; 1];
 	let input = [2u8; 32];
-	pwasm_ethereum::call(2000, &Address::new(), 10000.into(), &input, &mut result).unwrap();
+	pwasm_ethereum::call(2000, &Address::new(), 10000.into(), &input, &mut result).expect_err("Should be an Error");
 
 	let calls = ext_get().calls();
 	assert_eq!(calls.len(), 1);

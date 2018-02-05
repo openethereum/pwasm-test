@@ -6,17 +6,32 @@ use pwasm_std::hash::{H256, Address};
 use bigint::U256;
 use pwasm_abi::eth::EndpointInterface;
 
+#[doc(hidden)]
 #[derive(Debug)]
 pub struct Error;
 
+/// A fake contract endpoint
+/// Endpoint is just a closure which receives `value: U256`, `input: &[u8]`, `output: &mut [u8]`
+/// and returns `Ok(())` if call was successfull or `Err(Error)` otherwise
 pub struct Endpoint (Box<FnMut(U256, &[u8], &mut [u8]) -> Result<(), Error>>);
 
 impl Endpoint {
 	pub fn new(f: Box<FnMut(U256, &[u8], &mut [u8]) -> Result<(), Error>>) -> Endpoint {
 		Endpoint(f)
 	}
+	pub fn ok() -> Endpoint {
+		Endpoint(Box::new(move |_, _, _| {
+            Ok(())
+        }))
+	}
+	pub fn err() -> Endpoint {
+		Endpoint(Box::new(move |_, _, _| {
+            Err(Error)
+        }))
+	}
 }
 
+/// Wraps any `pwasm_abi::eth::EndpointInterface` to `Endpoint`
 impl<T: EndpointInterface + 'static> From<T> for Endpoint {
 	fn from(mut intf: T) -> Endpoint {
         Endpoint(Box::new(move |_val, input, result| {
@@ -26,105 +41,107 @@ impl<T: EndpointInterface + 'static> From<T> for Endpoint {
 	}
 }
 
+#[doc(hidden)]
 /// Trait to manage calls to blockchain externs locally
+/// This trait methods are called by `pwasm_ethereum::*` externs, see `externs.rs`
 pub trait External {
 
-	/// Invoked when contract is requesting balance extern
+	/// Invoked when contract is calling `pwasm_ethereum::balance`
 	fn balance(&mut self, _address: &Address) -> U256 {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting storage_read extern
+	/// Invoked when contract is calling `pwasm_ethereum::read`
 	fn storage_read(&mut self, _key: &H256) -> [u8; 32]  {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting storage_write extern
+	/// Invoked when contract is calling `pwasm_ethereum::write`
 	fn storage_write(&mut self, _key: &H256, _value: &[u8; 32]) {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting suicide extern
+	/// Invoked when contract is calling `pwasm_ethereum::suicide`
 	fn suicide(&mut self, _refund: &Address) {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting create extern
+	/// Invoked when contract is calling `pwasm_ethereum::create`
 	fn create(&mut self, _endowment: U256, _code: &[u8]) -> Result<Address, Error> {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting regular call (ccall) extern
+	/// Invoked when contract is calling regular `pwasm_ethereum::ccall`
 	fn call(&mut self, _gas: u64, _address: &Address, _val: U256, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting delegate call (dcall) extern
+	/// Invoked when contract is calling delegate (`pwasm_ethereum::dcall`)
 	fn call_code(&mut self, _gas: u64, _address: &Address, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting static call (ccall) extern
+	/// Invoked when contract is calling static call (`pwasm_ethereum::ccall`)
 	fn static_call(&mut self, _gas: u64, _address: &Address, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
 		unimplemented!()
 	}
 
-	/// Invoked when contract fires an event
-	fn log(&mut self, _topics: &[H256], _data: &[u8]) {
+	/// Invoked when contract fires an event (calls `pwasm_ethereum::elog`)
+	fn elog(&mut self, _topics: &[H256], _data: &[u8]) {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting debug message extern
+	/// Invoked when contract is calling debug message
 	fn debug_log(&mut self, _msg: String) {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting blockhash extern
+	/// Invoked when contract is calling `pwasm_ethereum::blockhash`
 	fn blockhash(&mut self, _number: u64) -> Result<H256, Error> {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting coinbase extern
+	/// Invoked when contract is calling `pwasm_ethereum::coinbase`
 	fn coinbase(&mut self) -> Address {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting timestamp extern
+	/// Invoked when contract is calling `pwasm_ethereum::timestamp`
 	fn timestamp(&mut self) -> u64 {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting blocknumber extern
+	/// Invoked when contract is calling `pwasm_ethereum::blocknumber`
 	fn blocknumber(&mut self) -> u64 {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting difficulty extern
+	/// Invoked when contract is calling `pwasm_ethereum::difficulty`
 	fn difficulty(&mut self) -> U256 {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting gas_limit extern
+	/// Invoked when contract is calling `pwasm_ethereum::gas_limit`
 	fn gas_limit(&mut self) -> U256 {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting sender data
+	/// Invoked when contract is calling `pwasm_ethereum::sender`
 	fn sender(&mut self) -> Address {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting origin data
+	/// Invoked when contract is calling `pwasm_ethereum::origin`
 	fn origin(&mut self) -> Address {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting value data
+	/// Invoked when contract is calling `pwasm_ethereum::value`
 	fn value(&mut self) -> U256 {
 		unimplemented!()
 	}
 
-	/// Invoked when contract is requesting contract address
+	/// Invoked when contract is calling `pwasm_ethereum::address`
 	fn address(&mut self) -> Address {
 		unimplemented!()
 	}
@@ -146,6 +163,7 @@ pub struct LogEntry {
 	pub data: Box<[u8]>,
 }
 
+#[doc(hidden)]
 #[derive(Clone, Default)]
 pub struct ExternalInstance {
 	pub storage: HashMap<H256, [u8; 32]>,
@@ -165,9 +183,12 @@ pub struct ExternalInstance {
 }
 
 impl ExternalInstance {
+
+	/// Returns records of calls was done via `pwasm_ethereum::call` with address, value, gas, and provided input
 	pub fn calls(&self) -> Vec<Call> {
 		self.calls.clone()
 	}
+	/// Returns log entries added with `pwasm_ethereum::elog`
 	pub fn logs(&self) -> Vec<LogEntry> {
 		self.log.clone()
 	}
@@ -200,11 +221,11 @@ impl External for ExternalInstance {
 		if let Some(endpoint) = self.endpoints.get_mut(address) {
 			Rc::get_mut(endpoint).unwrap().0(val, input, result)
 		} else {
-			Ok(())
+			Err(Error)
 		}
 	}
 
-	fn log(&mut self, topics: &[H256], data: &[u8]) {
+	fn elog(&mut self, topics: &[H256], data: &[u8]) {
 		self.log.push(LogEntry {
 			topics: Box::from(topics),
 			data: Box::from(data)
