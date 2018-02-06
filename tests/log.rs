@@ -1,26 +1,22 @@
-#[macro_use]
 extern crate pwasm_test;
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
 
-use pwasm_ethereum as eth;
 use pwasm_std::hash::H256;
-use pwasm_test::{ExternalBuilder, ExternalInstance, get_external};
+use pwasm_test::{ext_reset, ext_get};
 
 /// An example of how to use get_external to access log of some contract
-test_with_external!(
-	ExternalBuilder::new().build(),
-	fetch_log {
-		// Somewhere inside of the contract:
-		let topics = [H256::new(), H256::new()];
-		let data: &[u8] = b"some data";
-		eth::log(&topics, data);
+#[test]
+fn fetch_log() {
+	ext_reset(|e| e);
+	// Somewhere inside of the contract:
+	let topics = [H256::new(), H256::new()];
+	let data: &[u8] = b"some data";
+	pwasm_ethereum::log(&topics, data);
 
-		let external = get_external::<ExternalInstance>();
-		let log = external.logs();
-		assert_eq!(log.len(), 1);
-		let entry = &log[0];
-		assert_eq!(entry.topics.as_ref(), &[H256::new(), H256::new()]);
-		assert_eq!(entry.data.as_ref(), b"some data");
-	}
-);
+	let log =  ext_get().logs();
+	assert_eq!(log.len(), 1);
+	let entry = &log[0];
+	assert_eq!(entry.topics.as_ref(), &[H256::new(), H256::new()]);
+	assert_eq!(entry.data.as_ref(), b"some data");
+}

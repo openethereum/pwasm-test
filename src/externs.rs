@@ -9,8 +9,9 @@ use bigint::U256;
 
 use external::{External, ExternalInstance};
 
-thread_local!(pub static EXTERNAL: RefCell<Box<External>> = RefCell::new(Box::new(ExternalInstance::default())));
+thread_local!(#[doc(hidden)] pub static EXTERNAL: RefCell<Box<External>> = RefCell::new(Box::new(ExternalInstance::default())));
 
+#[doc(hidden)]
 /// Set handling external for the current thread
 /// Ideally should be done before each test to avoid dirty state
 /// Macro `test_with_external` uses this function and can help with such setup
@@ -20,6 +21,7 @@ pub fn set_external(ext: Box<External>) {
 	});
 }
 
+#[doc(hidden)]
 pub fn get_external<T: External + Clone + 'static>() -> T {
 	EXTERNAL.with(|arg| {
 		let ref_cell: &RefCell<Box<External>> = arg;
@@ -30,7 +32,7 @@ pub fn get_external<T: External + Clone + 'static>() -> T {
 		downcasted.clone()
 	})
 }
-
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn storage_read(key: *const u8, dst: *mut u8) {
 	EXTERNAL.with(|r| {
@@ -40,6 +42,7 @@ pub unsafe extern "C" fn storage_read(key: *const u8, dst: *mut u8) {
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn storage_write(key: *const u8, src_raw: *const u8) {
 	EXTERNAL.with(|r| {
@@ -51,6 +54,7 @@ pub unsafe extern "C" fn storage_write(key: *const u8, src_raw: *const u8) {
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn create(endowment_ptr: *const u8, code_ptr: *const u8, code_len: u32, address_ptr: *mut u8) -> i32 {
 	EXTERNAL.with(|r| {
@@ -63,6 +67,7 @@ pub unsafe extern "C" fn create(endowment_ptr: *const u8, code_ptr: *const u8, c
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn ccall(
 	gas: u64,
@@ -86,6 +91,7 @@ pub unsafe extern "C" fn ccall(
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn dcall(
 	gas: u64,
@@ -107,6 +113,7 @@ pub unsafe extern "C" fn dcall(
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn scall(
 	gas: u64,
@@ -128,6 +135,7 @@ pub unsafe extern "C" fn scall(
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn suicide(refund_ptr: *const u8) {
 	EXTERNAL.with(|r| {
@@ -136,6 +144,7 @@ pub unsafe extern "C" fn suicide(refund_ptr: *const u8) {
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn blockhash(number: i64, dest: *mut u8) -> i32 {
 	EXTERNAL.with(|r| {
@@ -146,6 +155,7 @@ pub unsafe extern "C" fn blockhash(number: i64, dest: *mut u8) -> i32 {
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn coinbase(dest: *mut u8) {
 	EXTERNAL.with(|r| {
@@ -153,6 +163,7 @@ pub unsafe extern "C" fn coinbase(dest: *mut u8) {
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn timestamp() -> i64 {
 	EXTERNAL.with(|r| {
@@ -160,6 +171,7 @@ pub unsafe extern "C" fn timestamp() -> i64 {
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn blocknumber() -> i64 {
 	EXTERNAL.with(|r| {
@@ -167,6 +179,7 @@ pub unsafe extern "C" fn blocknumber() -> i64 {
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn difficulty(dest: *mut u8) {
 	let mut dest = slice::from_raw_parts_mut(dest, 32);
@@ -175,6 +188,7 @@ pub unsafe extern "C" fn difficulty(dest: *mut u8) {
 	});
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn gaslimit(dest: *mut u8) {
 	let mut dest = slice::from_raw_parts_mut(dest, 32);
@@ -183,6 +197,7 @@ pub unsafe extern "C" fn gaslimit(dest: *mut u8) {
 	});
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn sender(dest: *mut u8) {
 	EXTERNAL.with(|r| {
@@ -190,6 +205,7 @@ pub unsafe extern "C" fn sender(dest: *mut u8) {
 	});
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn address(dest: *mut u8) {
 	EXTERNAL.with(|r| {
@@ -197,6 +213,7 @@ pub unsafe extern "C" fn address(dest: *mut u8) {
 	});
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn value(dest: *mut u8) {
 	EXTERNAL.with(|r| {
@@ -205,6 +222,7 @@ pub unsafe extern "C" fn value(dest: *mut u8) {
 	})
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn origin(dest: *mut u8) {
 	EXTERNAL.with(|r| {
@@ -212,6 +230,7 @@ pub unsafe extern "C" fn origin(dest: *mut u8) {
 	});
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn balance(address_ptr: *const u8, balance_ptr: *mut u8) {
 	EXTERNAL.with(|r| {
@@ -221,7 +240,7 @@ pub unsafe extern "C" fn balance(address_ptr: *const u8, balance_ptr: *mut u8) {
 	});
 }
 
-
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn debug(str_ptr: *const u8, str_len: u32) {
 	EXTERNAL.with(|r| {
@@ -230,11 +249,12 @@ pub unsafe extern "C" fn debug(str_ptr: *const u8, str_len: u32) {
 	});
 }
 
+#[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn elog(topic_ptr: *const u8, topic_count: u32, data_ptr: *const u8, data_len: u32) {
 	EXTERNAL.with(|r| {
 		let topics: &[H256] = slice::from_raw_parts(topic_ptr as *const H256, topic_count as usize);
 		let data: &[u8] = slice::from_raw_parts(data_ptr, data_len as usize);
-		r.borrow_mut().log(topics, data);
+		r.borrow_mut().elog(topics, data);
 	});
 }
