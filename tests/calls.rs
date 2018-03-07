@@ -13,7 +13,6 @@ fn has_called() {
 	let mut result = [0u8; 1];
 	let input = [2u8; 32];
 	pwasm_ethereum::call(2000, &Address::new(), 10000.into(), &input, &mut result).expect_err("Should be an Error");
-	ext_update(|e| e);
 	let calls = ext_get().calls();
 	assert_eq!(calls.len(), 1);
 
@@ -35,4 +34,16 @@ fn endpoint_has_called () {
 	let input = [2u8; 32];
 	pwasm_ethereum::call(20000, &"0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into(), 100.into(), &input, &mut result).unwrap();
 	assert_eq!(result[0], 2);
+}
+
+#[test]
+fn calls_update_ext() {
+	ext_reset(|e| e);
+	let mut result = [0u8; 1];
+	let input = [2u8; 32];
+	pwasm_ethereum::call(2000, &Address::new(), 10000.into(), &input, &mut result).expect_err("Should be an Error");
+	assert_eq!(ext_get().calls().len(), 1);
+	ext_update(|e| e);
+	pwasm_ethereum::call(2000, &Address::new(), 10000.into(), &input, &mut result).expect_err("Should be an Error");
+	assert_eq!(ext_get().calls().len(), 2);
 }

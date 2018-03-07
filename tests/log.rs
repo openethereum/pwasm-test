@@ -13,10 +13,22 @@ fn fetch_log() {
 	let topics = [H256::new(), H256::new()];
 	let data: &[u8] = b"some data";
 	pwasm_ethereum::log(&topics, data);
-	ext_update(|e| e);
 	let log =  ext_get().logs();
 	assert_eq!(log.len(), 1);
 	let entry = &log[0];
 	assert_eq!(entry.topics.as_ref(), &[H256::new(), H256::new()]);
 	assert_eq!(entry.data.as_ref(), b"some data");
+}
+
+#[test]
+fn log_update_ext() {
+	ext_reset(|e| e);
+	// Somewhere inside of the contract:
+	let topics = [H256::new(), H256::new()];
+	let data: &[u8] = b"some data";
+	pwasm_ethereum::log(&topics, data);
+	assert_eq!(ext_get().logs().len(), 1);
+	ext_update(|e| e);
+	pwasm_ethereum::log(&topics, data);
+	assert_eq!(ext_get().logs().len(), 2);
 }
