@@ -57,7 +57,7 @@ pub fn ext_update<F>(updater: F) where F: Fn(ExternalBuilder) -> ExternalBuilder
 	let old_ext = get_external::<ExternalInstance>();
 	let log = old_ext.log.clone();
 	let calls = old_ext.calls.clone();
-	let builder = ExternalBuilder::from(get_external::<ExternalInstance>());
+	let builder = ExternalBuilder::from(old_ext);
 	let mut ext = updater(builder).build();
 	ext.log = log;
 	ext.calls = calls;
