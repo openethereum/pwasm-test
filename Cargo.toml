@@ -4,11 +4,11 @@ version = "0.1.0"
 authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
 
 [dependencies.pwasm-std]
-version = "0.5"
+version = "0.6"
 features = ["std"]
 
 [dependencies.pwasm-ethereum ]
-version = "0.1"
+version = "0.3"
 features = ["std"]
 
 [dependencies]
