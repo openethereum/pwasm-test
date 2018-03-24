@@ -3,14 +3,21 @@ name = "pwasm-test"
 version = "0.1.0"
 authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
 
+[dependencies.bigint]
+version = "4"
+default-features = false
+
 [dependencies.pwasm-std]
 version = "0.6"
-features = ["std"]
+default-features = false
 
 [dependencies.pwasm-ethereum ]
 version = "0.3"
-features = ["std"]
+default-features = false
 
 [dependencies]
-pwasm-abi = { version = "0.1", features = ["std"] }
-bigint = "4"
+pwasm-abi = { version = "0.1" }
+
+[features]
+default = ["std"]
+std = ["pwasm-std/std", "pwasm-ethereum/std", "pwasm-abi/std"]
