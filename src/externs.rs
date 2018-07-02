@@ -259,21 +259,18 @@ pub unsafe extern "C" fn elog(topic_ptr: *const u8, topic_count: u32, data_ptr: 
 	});
 }
 
-#[cfg(windows)]
 #[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn ret(_: *const u8, _: u32) -> ! {
 	unimplemented!()
 }
 
-#[cfg(windows)]
 #[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn input_length() -> u32 {
 	unimplemented!()
 }
 
-#[cfg(windows)]
 #[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn fetch_input(_: *mut u8) {
