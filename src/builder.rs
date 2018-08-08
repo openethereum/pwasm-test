@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::rc::Rc;
+use std::cell::{RefCell};
 
 use pwasm_std::hash::{H256, Address};
 use bigint::U256;
@@ -280,10 +281,10 @@ impl ExternalBuilder {
 	/// Builds ExternalInstance from ExternalBuilder
 	pub fn build(self) -> ExternalInstance {
 		ExternalInstance {
-			log: Vec::new(),
-			calls: Vec::new(),
-			endpoints: self.endpoints,
-			storage: self.storage,
+			log: RefCell::new(Vec::new()),
+			calls: RefCell::new(Vec::new()),
+			storage: RefCell::new(self.storage),
+			endpoints: RefCell::new(self.endpoints),
 			balances: self.balances,
 			sender: self.sender,
 			value: self.value,
@@ -300,8 +301,8 @@ impl ExternalBuilder {
 	/// Restores ExternalBuilder from ExternalInstance
 	pub fn from_instance(instance: ExternalInstance) -> ExternalBuilder {
 		ExternalBuilder {
-			endpoints: instance.endpoints,
-			storage: instance.storage,
+			endpoints: instance.endpoints.borrow().clone(),
+			storage: instance.storage.borrow().clone(),
 			balances: instance.balances,
 			sender: instance.sender,
 			value: instance.value,
