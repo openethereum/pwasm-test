@@ -1,6 +1,7 @@
 use std::any::Any;
 use std::collections::HashMap;
 use std::rc::Rc;
+use std::ops::DerefMut;
 use std::cell::{RefCell};
 
 use pwasm_std::hash::{H256, Address};
@@ -171,7 +172,7 @@ pub struct ExternalInstance {
 	pub calls: RefCell<Vec<Call>>,
 	pub log: RefCell<Vec<LogEntry>>,
 	pub balances: HashMap<Address, U256>,
-	pub endpoints: RefCell<HashMap<Address, Rc<Endpoint>>>,
+	pub endpoints: HashMap<Address, Rc<RefCell<Endpoint>>>,
 	pub sender: Address,
 	pub value: U256,
 	pub address: Address,
@@ -219,8 +220,10 @@ impl External for ExternalInstance {
 			value: val,
 			input: Box::from(input)
 		});
-		if let Some(endpoint) = self.endpoints.borrow_mut().get_mut(address) {
-			Rc::get_mut(endpoint).unwrap().0(val, input, result)
+		if let Some(endpoint) = self.endpoints.get(address) {
+			let end: Rc<RefCell<Endpoint>> = endpoint.clone();
+			let mut e = endpoint.borrow_mut();
+			e.deref_mut().0(val, input, result)
 		} else {
 			Err(Error)
 		}
