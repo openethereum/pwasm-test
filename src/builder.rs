@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::rc::Rc;
-use std::cell::{RefCell};
+use std::cell::RefCell;
 
 use pwasm_std::hash::{H256, Address};
 use bigint::U256;

@@ -2,7 +2,7 @@ use std::any::Any;
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::ops::DerefMut;
-use std::cell::{RefCell};
+use std::cell::RefCell;
 
 use pwasm_std::hash::{H256, Address};
 use bigint::U256;
@@ -221,9 +221,7 @@ impl External for ExternalInstance {
 			input: Box::from(input)
 		});
 		if let Some(endpoint) = self.endpoints.get(address) {
-			let end: Rc<RefCell<Endpoint>> = endpoint.clone();
-			let mut e = endpoint.borrow_mut();
-			e.deref_mut().0(val, input, result)
+			endpoint.borrow_mut().deref_mut().0(val, input, result)
 		} else {
 			Err(Error)
 		}
