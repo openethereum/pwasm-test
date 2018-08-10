@@ -11,7 +11,7 @@ mod externs;
 mod builder;
 
 pub use external::{Endpoint, External, ExternalInstance, Error};
-pub use builder::{ExternalBuilder};
+pub use builder::ExternalBuilder;
 pub use externs::*;
 
 ///	Allows to mock `pwasm_ethereum::*` calls

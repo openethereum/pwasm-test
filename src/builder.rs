@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::rc::Rc;
+use std::cell::RefCell;
 
 use pwasm_std::hash::{H256, Address};
 use bigint::U256;
@@ -10,7 +11,7 @@ use external::{ExternalInstance, Endpoint};
 pub struct ExternalBuilder {
 	storage: HashMap<H256, [u8; 32]>,
 	balances: HashMap<Address, U256>,
-	endpoints: HashMap<Address, Rc<Endpoint>>,
+	endpoints: HashMap<Address, Rc<RefCell<Endpoint>>>,
 	value: U256,
 	sender: Address,
 	address: Address,
@@ -66,7 +67,7 @@ impl ExternalBuilder {
 	/// ```
 	///
 	pub fn endpoint(mut self, address: Address, endpoint: Endpoint) -> Self {
-		self.endpoints.insert(address, Rc::new(endpoint));
+		self.endpoints.insert(address, Rc::new(RefCell::new(endpoint)));
 		self
 	}
 
@@ -280,10 +281,10 @@ impl ExternalBuilder {
 	/// Builds ExternalInstance from ExternalBuilder
 	pub fn build(self) -> ExternalInstance {
 		ExternalInstance {
-			log: Vec::new(),
-			calls: Vec::new(),
+			log: RefCell::new(Vec::new()),
+			calls: RefCell::new(Vec::new()),
+			storage: RefCell::new(self.storage),
 			endpoints: self.endpoints,
-			storage: self.storage,
 			balances: self.balances,
 			sender: self.sender,
 			value: self.value,
@@ -300,8 +301,8 @@ impl ExternalBuilder {
 	/// Restores ExternalBuilder from ExternalInstance
 	pub fn from_instance(instance: ExternalInstance) -> ExternalBuilder {
 		ExternalBuilder {
-			endpoints: instance.endpoints,
-			storage: instance.storage,
+			endpoints: instance.endpoints.clone(),
+			storage: instance.storage.borrow().clone(),
 			balances: instance.balances,
 			sender: instance.sender,
 			value: instance.value,

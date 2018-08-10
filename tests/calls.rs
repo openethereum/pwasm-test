@@ -37,6 +37,25 @@ fn endpoint_has_called () {
 }
 
 #[test]
+fn endpoint_call_each_other () {
+	ext_reset(|e| e
+		.endpoint("0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into(), Endpoint::new(Box::new(|val, input,  mut result| {
+			result[0] = 2;
+			pwasm_ethereum::call(val.into(), &"0x35da6abcb08f2b6164fe380bb6c47bd8f2304d55".into(), 100.into(), &input, &mut result).unwrap();
+			Ok(())
+		})))
+		.endpoint("0x35da6abcb08f2b6164fe380bb6c47bd8f2304d55".into(), Endpoint::new(Box::new(|_val, _input, result| {
+			result[0] = 3;
+			Ok(())
+		})))
+	);
+	let mut result = [0u8; 1];
+	let input = [2u8; 32];
+	pwasm_ethereum::call(20000, &"0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into(), 100.into(), &input, &mut result).unwrap();
+	assert_eq!(result[0], 3);
+}
+
+#[test]
 fn calls_update_ext() {
 	ext_reset(|e| e);
 	let mut result = [0u8; 1];

@@ -1,6 +1,8 @@
 use std::any::Any;
 use std::collections::HashMap;
 use std::rc::Rc;
+use std::ops::DerefMut;
+use std::cell::RefCell;
 
 use pwasm_std::hash::{H256, Address};
 use bigint::U256;
@@ -47,102 +49,102 @@ impl<T: EndpointInterface + 'static> From<T> for Endpoint {
 pub trait External {
 
 	/// Invoked when contract is calling `pwasm_ethereum::balance`
-	fn balance(&mut self, _address: &Address) -> U256 {
+	fn balance(&self, _address: &Address) -> U256 {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::read`
-	fn storage_read(&mut self, _key: &H256) -> [u8; 32]  {
+	fn storage_read(&self, _key: &H256) -> [u8; 32]  {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::write`
-	fn storage_write(&mut self, _key: &H256, _value: &[u8; 32]) {
+	fn storage_write(&self, _key: &H256, _value: &[u8; 32]) {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::suicide`
-	fn suicide(&mut self, _refund: &Address) {
+	fn suicide(&self, _refund: &Address) {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::create`
-	fn create(&mut self, _endowment: U256, _code: &[u8]) -> Result<Address, Error> {
+	fn create(&self, _endowment: U256, _code: &[u8]) -> Result<Address, Error> {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling regular `pwasm_ethereum::ccall`
-	fn call(&mut self, _gas: u64, _address: &Address, _val: U256, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
+	fn call(&self, _gas: u64, _address: &Address, _val: U256, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling delegate (`pwasm_ethereum::dcall`)
-	fn call_code(&mut self, _gas: u64, _address: &Address, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
+	fn call_code(&self, _gas: u64, _address: &Address, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling static call (`pwasm_ethereum::ccall`)
-	fn static_call(&mut self, _gas: u64, _address: &Address, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
+	fn static_call(&self, _gas: u64, _address: &Address, _input: &[u8], _result: &mut [u8]) -> Result<(), Error> {
 		unimplemented!()
 	}
 
 	/// Invoked when contract fires an event (calls `pwasm_ethereum::elog`)
-	fn elog(&mut self, _topics: &[H256], _data: &[u8]) {
+	fn elog(&self, _topics: &[H256], _data: &[u8]) {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling debug message
-	fn debug_log(&mut self, _msg: String) {
+	fn debug_log(&self, _msg: String) {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::blockhash`
-	fn blockhash(&mut self, _number: u64) -> Result<H256, Error> {
+	fn blockhash(&self, _number: u64) -> Result<H256, Error> {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::coinbase`
-	fn coinbase(&mut self) -> Address {
+	fn coinbase(&self) -> Address {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::timestamp`
-	fn timestamp(&mut self) -> u64 {
+	fn timestamp(&self) -> u64 {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::blocknumber`
-	fn blocknumber(&mut self) -> u64 {
+	fn blocknumber(&self) -> u64 {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::difficulty`
-	fn difficulty(&mut self) -> U256 {
+	fn difficulty(&self) -> U256 {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::gas_limit`
-	fn gas_limit(&mut self) -> U256 {
+	fn gas_limit(&self) -> U256 {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::sender`
-	fn sender(&mut self) -> Address {
+	fn sender(&self) -> Address {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::origin`
-	fn origin(&mut self) -> Address {
+	fn origin(&self) -> Address {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::value`
-	fn value(&mut self) -> U256 {
+	fn value(&self) -> U256 {
 		unimplemented!()
 	}
 
 	/// Invoked when contract is calling `pwasm_ethereum::address`
-	fn address(&mut self) -> Address {
+	fn address(&self) -> Address {
 		unimplemented!()
 	}
 
@@ -166,11 +168,11 @@ pub struct LogEntry {
 #[doc(hidden)]
 #[derive(Clone, Default)]
 pub struct ExternalInstance {
-	pub storage: HashMap<H256, [u8; 32]>,
+	pub storage: RefCell<HashMap<H256, [u8; 32]>>,
+	pub calls: RefCell<Vec<Call>>,
+	pub log: RefCell<Vec<LogEntry>>,
 	pub balances: HashMap<Address, U256>,
-	pub endpoints: HashMap<Address, Rc<Endpoint>>,
-	pub calls: Vec<Call>,
-	pub log: Vec<LogEntry>,
+	pub endpoints: HashMap<Address, Rc<RefCell<Endpoint>>>,
 	pub sender: Address,
 	pub value: U256,
 	pub address: Address,
@@ -186,86 +188,86 @@ impl ExternalInstance {
 
 	/// Returns records of calls was done via `pwasm_ethereum::call` with address, value, gas, and provided input
 	pub fn calls(&self) -> Vec<Call> {
-		self.calls.clone()
+		self.calls.borrow().clone()
 	}
 	/// Returns log entries added with `pwasm_ethereum::elog`
 	pub fn logs(&self) -> Vec<LogEntry> {
-		self.log.clone()
+		self.log.borrow().clone()
 	}
 }
 
 impl External for ExternalInstance {
-	fn storage_read(&mut self, key: &H256) -> [u8; 32] {
-		if let Some(value) = self.storage.get(key) {
+	fn storage_read(&self, key: &H256) -> [u8; 32] {
+		if let Some(value) = self.storage.borrow().get(key) {
 			value.clone()
 		} else {
 			[0u8; 32]
 		}
 	}
 
-	fn balance(&mut self, address: &Address) -> U256 {
+	fn balance(&self, address: &Address) -> U256 {
 		self.balances[address]
 	}
 
-	fn storage_write(&mut self, key: &H256, value: &[u8; 32]) {
-		self.storage.insert(*key, value.clone());
+	fn storage_write(&self, key: &H256, value: &[u8; 32]) {
+		self.storage.borrow_mut().insert(*key, value.clone());
 	}
 
-	fn call(&mut self, gas: u64, address: &Address, val: U256, input: &[u8], result: &mut [u8]) -> Result<(), Error> {
-		self.calls.push(Call {
+	fn call(&self, gas: u64, address: &Address, val: U256, input: &[u8], result: &mut [u8]) -> Result<(), Error> {
+		self.calls.borrow_mut().push(Call {
 			gas: gas,
 			address: address.clone(),
 			value: val,
 			input: Box::from(input)
 		});
-		if let Some(endpoint) = self.endpoints.get_mut(address) {
-			Rc::get_mut(endpoint).unwrap().0(val, input, result)
+		if let Some(endpoint) = self.endpoints.get(address) {
+			endpoint.borrow_mut().deref_mut().0(val, input, result)
 		} else {
 			Err(Error)
 		}
 	}
 
-	fn elog(&mut self, topics: &[H256], data: &[u8]) {
-		self.log.push(LogEntry {
+	fn elog(&self, topics: &[H256], data: &[u8]) {
+		self.log.borrow_mut().push(LogEntry {
 			topics: Box::from(topics),
 			data: Box::from(data)
 			}
 		);
 	}
 
-	fn sender(&mut self) -> Address {
+	fn sender(&self) -> Address {
 		self.sender
 	}
 
-	fn coinbase(&mut self) -> Address {
+	fn coinbase(&self) -> Address {
 		self.coinbase
 	}
 
-	fn timestamp(&mut self) -> u64 {
+	fn timestamp(&self) -> u64 {
 		self.timestamp
 	}
 
-	fn blocknumber(&mut self) -> u64 {
+	fn blocknumber(&self) -> u64 {
 		self.blocknumber
 	}
 
-	fn difficulty(&mut self) -> U256 {
+	fn difficulty(&self) -> U256 {
 		self.difficulty
 	}
 
-	fn gas_limit(&mut self) -> U256 {
+	fn gas_limit(&self) -> U256 {
 		self.gas_limit
 	}
 
-	fn origin(&mut self) -> Address {
+	fn origin(&self) -> Address {
 		self.origin
 	}
 
-	fn value(&mut self) -> U256 {
+	fn value(&self) -> U256 {
 		self.value
 	}
 
-	fn address(&mut self) -> Address {
+	fn address(&self) -> Address {
 		self.address
 	}
 
