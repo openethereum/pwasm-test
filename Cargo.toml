@@ -11,11 +11,11 @@ version = "4.4"
 default-features = false
 
 [dependencies.pwasm-std]
-version = "0.9"
+version = "0.10"
 default-features = false
 
 [dependencies.pwasm-ethereum]
-version = "0.5"
+version = "0.6"
 default-features = false
 
 [features]

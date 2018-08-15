@@ -18,6 +18,7 @@ pub struct ExternalBuilder {
 	origin: Address,
 	coinbase: Address,
 	difficulty: U256,
+	gas_left: u64,
 	gas_limit: U256,
 	blocknumber: u64,
 	timestamp: u64,
@@ -36,6 +37,7 @@ impl ExternalBuilder {
 			origin: Address::default(),
 			coinbase: Address::default(),
 			difficulty: U256::zero(),
+			gas_left: 0u64,
 			gas_limit: U256::zero(),
 			blocknumber: 0u64,
 			timestamp: 0u64,
@@ -205,6 +207,24 @@ impl ExternalBuilder {
 		self
 	}
 
+	/// Sets `pwasm_ethereum::gas_left()`
+	///
+	/// # Example
+	/// ```
+	/// # extern crate pwasm_test;
+	/// # extern crate pwasm_ethereum;
+	/// # use pwasm_test::ext_reset;
+	/// # fn main () {
+	/// #
+	///	ext_reset(|e| e.gas_left(1337));
+	///	assert_eq!(pwasm_ethereum::gas_left(), 1337);
+	/// # }
+	/// ```
+	pub fn gas_left(mut self, gas_left: u64) -> Self {
+		self.gas_left = gas_left;
+		self
+	}
+
 	/// Sets `pwasm_ethereum::gas_limit()`
 	///
 	/// # Example
@@ -292,6 +312,7 @@ impl ExternalBuilder {
 			address: self.address,
 			coinbase: self.coinbase,
 			difficulty: self.difficulty,
+			gas_left: self.gas_left,
 			gas_limit: self.gas_limit,
 			blocknumber: self.blocknumber,
 			timestamp: self.timestamp,
@@ -310,6 +331,7 @@ impl ExternalBuilder {
 			address: instance.address,
 			coinbase: instance.coinbase,
 			difficulty: instance.difficulty,
+			gas_left: instance.gas_left,
 			gas_limit: instance.gas_limit,
 			blocknumber: instance.blocknumber,
 			timestamp: instance.timestamp,

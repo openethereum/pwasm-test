@@ -128,6 +128,11 @@ pub trait External {
 		unimplemented!()
 	}
 
+	/// Invoked when contract is calling `pwasm_ethereum::gas_limit`
+	fn gas_left(&self) -> u64 {
+		unimplemented!()
+	}
+
 	/// Invoked when contract is calling `pwasm_ethereum::sender`
 	fn sender(&self) -> Address {
 		unimplemented!()
@@ -180,6 +185,7 @@ pub struct ExternalInstance {
 	pub coinbase: Address,
 	pub difficulty: U256,
 	pub gas_limit: U256,
+	pub gas_left: u64,
 	pub blocknumber: u64,
 	pub timestamp: u64,
 }
@@ -257,6 +263,10 @@ impl External for ExternalInstance {
 
 	fn gas_limit(&self) -> U256 {
 		self.gas_limit
+	}
+
+	fn gas_left(&self) -> u64 {
+		self.gas_left
 	}
 
 	fn origin(&self) -> Address {

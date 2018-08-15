@@ -190,6 +190,15 @@ pub unsafe extern "C" fn difficulty(dest: *mut u8) {
 
 #[doc(hidden)]
 #[no_mangle]
+pub unsafe extern "C" fn gasleft() -> i64 {
+	EXTERNAL.with(|r| {
+		r.borrow().gas_left() as i64
+	})
+}
+
+
+#[doc(hidden)]
+#[no_mangle]
 pub unsafe extern "C" fn gaslimit(dest: *mut u8) {
 	let mut dest = slice::from_raw_parts_mut(dest, 32);
 	EXTERNAL.with(|r| {
