@@ -6,16 +6,16 @@ authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
 [dependencies]
 pwasm-abi = "0.1"
 
-[dependencies.bigint]
-version = "4.4"
+[dependencies.uint]
+version = "0.3"
 default-features = false
 
 [dependencies.pwasm-std]
-version = "0.9"
+version = "0.10"
 default-features = false
 
 [dependencies.pwasm-ethereum]
-version = "0.5"
+version = "0.6"
 default-features = false
 
 [features]
