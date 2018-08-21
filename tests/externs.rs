@@ -1,9 +1,9 @@
 extern crate pwasm_test;
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
-extern crate bigint;
+extern crate uint;
 
-use bigint::U256;
+use uint::U256;
 use pwasm_std::hash::Address;
 use pwasm_test::ext_reset;
 

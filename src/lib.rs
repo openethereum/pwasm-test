@@ -3,7 +3,7 @@
 
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
-extern crate bigint;
+extern crate uint;
 extern crate pwasm_abi;
 
 mod external;

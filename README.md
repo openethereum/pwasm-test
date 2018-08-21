@@ -8,11 +8,11 @@ Let's assume we have a simple TokenContract. Let's see how we use `pwasm_test` t
 ```rust
 extern crate parity_hash;
 extern crate pwasm_ethereum;
-extern crate bigint;
+extern crate uint;
 
 use parity_hash::{H256, Address};
 use pwasm_ethereum;
-use bigint::U256;
+use uint::U256;
 use pwasm_abi_derive::eth_abi;
 
 static TOTAL_SUPPLY_KEY: H256 = H256([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);

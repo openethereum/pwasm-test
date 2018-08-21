@@ -5,7 +5,7 @@ use std::slice;
 use std::ptr;
 
 use pwasm_std::hash::{H256, Address};
-use bigint::U256;
+use uint::U256;
 
 use external::{External, ExternalInstance};
 
