@@ -4,8 +4,8 @@ use std::cell::{RefCell, Ref};
 use std::slice;
 use std::ptr;
 
-use pwasm_std::hash::{H256, Address};
-use uint::U256;
+use pwasm_std::types::{H160, H256, U256};
+type Address = H160;
 
 use external::{External, ExternalInstance};
 
@@ -61,7 +61,7 @@ pub unsafe extern "C" fn create(endowment_ptr: *const u8, code_ptr: *const u8, c
 		let endowment = U256::from_big_endian(slice::from_raw_parts(endowment_ptr, 32));
 		let code: &[u8] = slice::from_raw_parts(code_ptr, code_len as usize);
 		match r.borrow().create(endowment, code) {
-			Ok(result) => { ptr::copy(result.as_ptr(), address_ptr, result.len()); 0 },
+			Ok(result) => { ptr::copy(result.as_ptr(), address_ptr, Address::len_bytes()); 0 },
 			Err(_e) => 1
 		}
 	})
@@ -149,7 +149,7 @@ pub unsafe extern "C" fn suicide(refund_ptr: *const u8) {
 pub unsafe extern "C" fn blockhash(number: i64, dest: *mut u8) -> i32 {
 	EXTERNAL.with(|r| {
 		match r.borrow().blockhash(number as u64) {
-			Ok(result) => { ptr::copy(result.as_ptr(), dest, result.len()); 0 },
+			Ok(result) => { ptr::copy(result.as_ptr(), dest, Address::len_bytes()); 0 },
 			Err(_e) => 1
 		}
 	})
