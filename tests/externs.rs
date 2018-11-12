@@ -2,9 +2,7 @@ extern crate pwasm_test;
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
 
-use pwasm_std::types::{H160, U256};
-type Address = H160;
-
+use pwasm_std::types::{U256, Address};
 use pwasm_test::ext_reset;
 
 #[test]

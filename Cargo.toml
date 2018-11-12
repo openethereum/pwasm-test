@@ -4,9 +4,16 @@ version = "0.1.1"
 authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
 
 [dependencies]
-pwasm-abi = "0.1"
-pwasm-std = "0.11"
-pwasm-ethereum = { git = "https://github.com/Robbepop/pwasm-ethereum", branch = "update-to-pwasm-std-0_11", default-features = false }
+pwasm-std = { version = "0.13", default-features = false }
+
+[dependencies.pwasm-abi]
+git = "https://github.com/paritytech/pwasm-abi"
+branch = "update-to-pwasm-std-0_11"
+
+[dependencies.pwasm-ethereum]
+git = "https://github.com/Robbepop/pwasm-ethereum"
+branch = "update-to-pwasm-std-0_11"
+default-features = false
 
 [features]
 default = ["std"]

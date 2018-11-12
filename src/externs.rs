@@ -4,9 +4,7 @@ use std::cell::{RefCell, Ref};
 use std::slice;
 use std::ptr;
 
-use pwasm_std::types::{H160, H256, U256};
-type Address = H160;
-
+use pwasm_std::types::{H256, U256, Address};
 use external::{External, ExternalInstance};
 
 thread_local!(#[doc(hidden)] pub static EXTERNAL: RefCell<Box<External>> = RefCell::new(Box::new(ExternalInstance::default())));

@@ -2,9 +2,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 use std::cell::RefCell;
 
-use pwasm_std::types::{H160, H256, U256};
-type Address = H160;
-
+use pwasm_std::types::{H256, U256, Address};
 use external::{ExternalInstance, Endpoint};
 
 /// A builder for quick creation of External impls for testing.

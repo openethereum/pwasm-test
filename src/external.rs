@@ -4,8 +4,7 @@ use std::rc::Rc;
 use std::ops::DerefMut;
 use std::cell::RefCell;
 
-use pwasm_std::types::{H160, H256, U256};
-type Address = H160;
+use pwasm_std::types::{H256, U256, Address};
 use pwasm_abi::eth::EndpointInterface;
 
 #[doc(hidden)]

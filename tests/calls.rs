@@ -2,9 +2,7 @@ extern crate pwasm_test;
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
 
-use pwasm_std::types::{H160};
-type Address = H160;
-
+use pwasm_std::types::Address;
 use pwasm_test::{ext_reset, ext_update, ext_get, Endpoint};
 
 /// An example of how to use get_external to access "calls" to some contract
