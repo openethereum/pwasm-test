@@ -1,9 +1,8 @@
 //! `pwasm_ethereum` test lib
-#![cfg_attr(not(feature="std"), no_std)]
+#![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
-extern crate uint;
 extern crate pwasm_abi;
 
 mod external;
@@ -25,8 +24,8 @@ pub use externs::*;
 ///	use pwasm_test::ext_reset;
 ///
 /// fn main () {
-///		ext_reset(|e| e.sender("0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into()));
-///		assert_eq!(pwasm_ethereum::sender(), "0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into());
+///		ext_reset(|e| e.sender("16a0772b17ae004e6645e0e95bf50ad69498a34e".parse().unwrap()));
+///		assert_eq!(pwasm_ethereum::sender(), "16a0772b17ae004e6645e0e95bf50ad69498a34e".parse().unwrap());
 /// }
 /// ```
 ///
@@ -48,10 +47,10 @@ pub fn ext_reset<F>(updater: F) where F: Fn(ExternalBuilder) -> ExternalBuilder 
 ///
 /// fn main () {
 ///		ext_reset(|e| e.value(10000.into()));
-///		ext_update(|e| e.sender("0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into()));
+///		ext_update(|e| e.sender("16a0772b17ae004e6645e0e95bf50ad69498a34e".parse().unwrap()));
 ///
 /// 	assert_eq!(pwasm_ethereum::value(), 10000.into());
-///		assert_eq!(pwasm_ethereum::sender(), "0x16a0772b17ae004e6645e0e95bf50ad69498a34e".into());
+///		assert_eq!(pwasm_ethereum::sender(), "16a0772b17ae004e6645e0e95bf50ad69498a34e".parse().unwrap());
 /// }
 /// ```
 pub fn ext_update<F>(updater: F) where F: Fn(ExternalBuilder) -> ExternalBuilder {
