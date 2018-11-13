@@ -6,10 +6,7 @@ authors = ["NikVolf <nikvolf@gmail.com>", "Alexey Frolov <frol.rage@gmail.com>"]
 [dependencies]
 pwasm-std = { version = "0.13", default-features = false }
 pwasm-ethereum = { version = "0.8", default-features = false }
-
-[dependencies.pwasm-abi]
-git = "https://github.com/paritytech/pwasm-abi"
-branch = "update-to-pwasm-std-0_11"
+pwasm-abi = { version = "0.2" }
 
 [features]
 default = ["std"]
